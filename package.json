@@ -2,39 +2,27 @@
   "name": "gitke",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "DEBUG=GITKE:* nodemon src/index.js"
+    "start": "kkt start",
+    "build": "kkt build"
   },
   "keywords": [
     "git"
   ],
   "author": "Kenny Wong <wowohoo@qq.com>",
   "license": "MIT",
-  "nodemonConfig": {
-    "ignore": [
-      "node_modules/*",
-      "doc/*",
-      ".gitke-data/*"
-    ]
-  },
   "dependencies": {
-    "@koa/cors": "^2.2.2",
-    "dayjs": "^1.7.5",
-    "fs-extra": "^7.0.0",
-    "koa": "^2.5.2",
-    "koa-body": "^4.0.4",
-    "koa-generic-session": "^2.0.1",
-    "koa-generic-session-sequelize": "^2.0.3",
-    "koa-json": "^2.0.2",
-    "koa-logger": "^3.2.0",
-    "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
-    "os-homedir": "^1.0.2",
-    "sequelize": "^4.38.0",
-    "sqlite3": "^4.0.2"
+    "@rematch/core": "^0.5.4",
+    "axios": "^0.18.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-dynamic-loadable": "^1.0.8",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "uiw": "^1.15.9"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "kkt": "1.9.x"
   }
 }

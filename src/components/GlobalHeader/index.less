@@ -1,0 +1,27 @@
+.header {
+  height: 50px;
+  position: relative;
+  line-height: 44px;
+  position: relative;
+  z-index: 9;
+  .inner {
+    position: fixed;
+    display: flex;
+    padding: 0 10px;
+    background-color: #fff;
+    border-top: 6px solid #000;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1), 0 1px 0 0 rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+    margin: 0 auto;
+  }
+  .right {
+    a {
+      margin: 0 0 0 10px;
+    }
+  }
+  :global {
+    .w-breadcrumb {
+      line-height: 44px;
+    }
+  }
+}
