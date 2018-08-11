@@ -89,7 +89,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       defaultValue: '',
       validate: {
-        len: { args: [1, 30], msg: '姓名长度为1-30' }
+        len: { args: [0, 30], msg: '姓名长度为0-30' }
       },
       comment: '姓名'
     },
@@ -122,13 +122,14 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       defaultValue: '',
       validate: {
-        isEmail: { args: true, msg: '请输入正确的邮箱！'}
+        isEmail: { args: true, msg: '请输入正确的邮箱！' }
       },
       comment: 'user email'
     },
     public_email: {
       type: DataTypes.STRING,
-      defaultValue: '',
+      defaultValue: null,
+      allowNull: true,
       validate: {
         isEmail: { args: true, msg: '请输入正确的邮箱！' }
       },
@@ -152,8 +153,10 @@ module.exports = function (sequelize, DataTypes) {
     },
     web_url: {
       type: DataTypes.STRING,
-      defaultValue: '',
+      defaultValue: null,
+      allowNull: true,
       validate: {
+        isUrl: { args: true, msg: '请输入正确的URL' },
         len: { args: [0, 400], msg: 'URL，长度超出范围' }
       },
       comment: '个人主页'
@@ -180,7 +183,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     password: {
       type: DataTypes.STRING(100),
-      defaultValue: '',
+      allowNull: false,
       validate: {
         len: { args: [0, 100], msg: '且长度为1-100' }
       },
@@ -191,7 +194,8 @@ module.exports = function (sequelize, DataTypes) {
       get() {
         if (!this.getDataValue('locked_at')) return;
         return dayjs(this.getDataValue('locked_at')).format('YYYY/MM/DD HH:mm:ss');
-      }
+      },
+      comment: '用户锁住定'
     },
     updated_at: {
       type: DataTypes.DATE,

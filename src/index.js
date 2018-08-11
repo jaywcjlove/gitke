@@ -7,15 +7,28 @@ const json = require('koa-json');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const static = require('koa-static');
+
 const SequelizeStore = require('koa-generic-session-sequelize');
 const app = new Koa();
 
 const Models = require('../conf/sequelize');
 
+app.keys = ['gitke:session'];
 app.use(session({
-  secret: 'keyboard cat',
+  secret: 'gitke:cat',
   saveUninitialized: false,
-  store: new SequelizeStore(Models.sequelize),
+  store: new SequelizeStore(Models.sequelize,{
+    get: () => {
+      console.log('test');
+    }
+  }),
+  cookie: {
+    httpOnly: false, // key
+    // maxAge: null,
+    // path: '/',
+    // secure: false,
+    maxAge: 1800000
+  },
   rolling: true, // 刷新页面 session 过期时间重置
   resave: true, // 是否允许session重新设置，要保证session有操作的时候必须设置这个属性为true
   proxy: true // if you do SSL outside of node.
