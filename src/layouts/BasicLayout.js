@@ -103,7 +103,6 @@ class BasicLayout extends PureComponent {
         );
       }
     });
-    console.log('~~~:', RouteComponentsPath);
     return (
       <Container menuData={getMenuData()} {...this.props}>
         <GlobalHeader breadcrumb={this.getRouteBreadcrumb()} userData={userData} token={this.props.token} />

@@ -50,12 +50,12 @@ module.exports = function (webpackConf, ServerConf) {
     return webpackConf;
   }
   if (ServerConf) {
-    // ServerConf.proxy = {
-    //   '/api/*': {
-    //     target: 'http://127.0.0.1:9981',
-    //     changeOrigin: true,
-    //   },
-    // }
+    ServerConf.proxy = {
+      '/api/*': {
+        target: 'http://127.0.0.1:2018',
+        changeOrigin: true,
+      },
+    }
     // console.log('ServerConf:', ServerConf);
     return ServerConf;
   }

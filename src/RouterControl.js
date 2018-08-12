@@ -1,15 +1,16 @@
 import React from 'react';
-import { BrowserRouter, Switch, withRouter, Route } from 'react-router-dom';
+import { Router, Switch, withRouter, Route } from 'react-router-dom';
+import history from './history';
 import { getRouterData } from './common/router';
 
-const RoutersContainer = withRouter(({ history, location }) => {
+const RoutersContainer = withRouter(({ history: historyData, location }) => {
   const routerData = getRouterData();
   const BasicLayout = routerData['/'].component;
   const UserLayout = routerData['/login'].component;
   const UserJoinLayout = routerData['/join'].component;
   const resetProps = {
     location,
-    history,
+    history: historyData,
     routerData,
   };
   return (
@@ -22,7 +23,7 @@ const RoutersContainer = withRouter(({ history, location }) => {
 });
 
 export default () => (
-  <BrowserRouter>
+  <Router history={history}>
     <RoutersContainer />
-  </BrowserRouter>
+  </Router>
 );

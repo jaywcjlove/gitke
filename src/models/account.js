@@ -25,30 +25,23 @@ export const account = {
   },
   effects: {
     async login({ username, password }) {
-      // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-      // Fetch 请求实例
       this.updateState({ loading: true });
       const data = await request('/api/user/login', {
         method: 'POST',
         body: { username, password },
       });
-      if (data.data) {
-        await this.updateState({ userData: data.data });
-        await localStorage.setItem('userData', JSON.stringify(data.data));
-      } else if (data.error) {
-        await this.updateState({ message: data.error });
+      if (data) {
+        this.updateState({ userData: data, token: data.token });
       }
       this.updateState({ loading: false });
     },
     async logout() {
-      // await localStorage.removeItem('token');
-      await localStorage.removeItem('userData');
-      await this.updateState({ userData: {}, token: null });
+      await request('/api/user/logout', { method: 'DELETE' });
     },
     async verify() {
       const data = await request('/api/user/verify');
-      if (data && data.code === 0) {
-        await this.updateState({ userData: data.data, token: data.token });
+      if (data) {
+        this.updateState({ userData: data, token: data.token });
       }
     },
   },

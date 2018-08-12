@@ -23,12 +23,11 @@ class Login extends PureComponent {
   componentDidMount() {
     this.props.logout();
   }
-  componentWillReceiveProps() {
-    // console.log('nextProps.userData:', nextProps.userData);
-    // const { history } = this.props;
-    // if (nextProps.userData) {
-    //   history.push('/');
-    // }
+  componentWillReceiveProps(nextProps) {
+    const { history } = this.props;
+    if (nextProps.userData) {
+      history.push('/');
+    }
   }
   login() {
     this.props.login(this.state.form);

@@ -65,9 +65,9 @@ export default function request(url, options = {}) {
       if (response.status >= 200 && response.status < 300) {
         return response;
       }
-      if (response.status === 401 && location.pathname !== '/user/login') {
+      if (response.status === 401 && location.pathname !== '/login') {
         Message.error(response.data ? message : '请求失败！', { duration: 4 });
-        history.push('/user/login');
+        history.push('/login');
         return response.data;
       }
       const errortext = message || codeMessage[response.status] || response.statusText;

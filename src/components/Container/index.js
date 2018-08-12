@@ -76,7 +76,6 @@ export default class Container extends Component {
     const { menuData, collapsed, children } = this.props;
     const defaultOpened = collapsed ? [] : this.getSelectedMenuKeys();
     let defaultActive = defaultOpened && defaultOpened.length > 0 ? defaultOpened[defaultOpened.length - 1] : '/';
-    // console.log('subMenuData:', menuData, defaultActive, defaultOpened);
     defaultActive = defaultActiveReal(menuData, defaultActive);
     const subMenuData = menuData.filter(item => (new RegExp(`^${item.path}`)).test(defaultActive));
     const width = (() => {
@@ -84,11 +83,12 @@ export default class Container extends Component {
       if (subMenuData[0].children && subMenuData[0].children.length > 0) return 206;
       return 0;
     })();
-    // console.log('subMenuData:', subMenuData);
     return (
       <div className={styles.wapper}>
         <div className={styles.topNav}>
-          <LOGO className={styles.logo} />
+          <Link to="/">
+            <LOGO className={styles.logo} />
+          </Link>
           <div className={styles.topMenu}>
             {menuData.map((item, index) => {
               const iconView = typeof item.icon === 'string' ? <Icon type={item.icon} /> : item.icon;
