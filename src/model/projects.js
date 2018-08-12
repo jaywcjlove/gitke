@@ -90,6 +90,34 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       comment: '创建的用户ID'
     },
+    import_url: {
+      type: DataTypes.STRING,
+      defaultValue: null,
+      allowNull: true,
+      validate: {
+        isUrl: { args: true, msg: 'URL格式不正确' },
+      },
+      comment: '导入仓库地址'
+    },
+    forks_url: {
+      type: DataTypes.STRING,
+      defaultValue: null,
+      allowNull: true,
+      validate: {
+        isUrl: { args: true, msg: 'URL格式不正确' },
+      },
+      comment: 'fork url'
+    },
+    fork: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
+      comment: 'fork'
+    },
+    private: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
+      comment: '是否私有'
+    },
     updated_at: {
       type: DataTypes.DATE,
       get() {

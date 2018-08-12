@@ -2,6 +2,47 @@ const dayjs = require('dayjs');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('namespaces', {
+    name: {
+      type: DataTypes.STRING,
+      unique: { msg: 'The name is repeated.' },
+      allowNull: false,
+      comment: '名字'
+    },
+    path: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      comment: '路径'
+    },
+    owner_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      references: {
+        model: 'users'
+      },
+      comment: '创建者id'
+    },
+    type: {
+      type: DataTypes.STRING,
+      defaultValue: null,
+      allowNull: true,
+      validate: {
+        isIn: {
+          args: [['Group']],
+          msg: '可选 Group 类型'
+        }
+      },
+      comment: 'Group 为组，null为个人'
+    },
+    description: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+      comment: '组织介绍'
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+      comment: '用户头像'
+    },
     updated_at: {
       type: DataTypes.DATE,
       get() {

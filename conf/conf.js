@@ -10,6 +10,8 @@ FS.ensureDir(cachPath);
 module.exports = {
   // pid 存储目录
   pidPath: path.join(cachPath, 'gitke.pid'),
+  // Git 仓存储目录
+  reposPath: path.join(cachPath, 'repos'),
   // sqlite数据库存放目录
   sqliteDataPath: path.join(cachPath, 'gitke.sqlite3'),
   // 数据库设置

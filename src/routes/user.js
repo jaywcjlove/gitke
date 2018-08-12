@@ -18,11 +18,10 @@ const router = new Router({
 router
   .get('/users', user.list)
   /**
-   * @api {GET} /api/user/verify 验证用户是否登录
+   * @api {GET} /api/user/verify 验证登录
    * 
    * @apiName getUserVerify
    * @apiGroup Users
-   *
    *
    * @apiUse UserInfo
    * 
@@ -56,8 +55,97 @@ router
    *  }
    */
   .get('/user/verify', user.verify)
+  /**
+   * @api {delete} /api/user/logout 退出登录
+   * 
+   * @apiName logout
+   * @apiGroup Users
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   * HTTP/1.1 200 OK
+   *  {
+   *    "message": "您已退出登录"
+   *  }
+   * 
+   */
   .delete('/user/logout', user.logout)
+  /**
+   * @api {post} /api/user 新增用户
+   * 
+   * @apiName created
+   * @apiGroup Users
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   * HTTP/1.1 200 OK
+   *  {
+   *    "updated_at": "2018/08/13 00:55:17",
+   *    "created_at": "2018/08/13 00:55:17",
+   *    "name": "",
+   *    "admin": false,
+   *    "bio": "",
+   *    "location": "",
+   *    "organization": "",
+   *    "preferred_language": "",
+   *    "avatar": "",
+   *    "linkedin": "",
+   *    "skype": "",
+   *    "state": "active",
+   *    "id": 2,
+   *    "username": "wcji232",
+   *    "email": "wowohoo@gmai.com",
+   *    "public_email": "ss@qq.com",
+   *    "password": "admin",
+   *    "web_url": "http://foo.com"
+   *  }
+   *
+   * @apiErrorExample {json} Error-Response:
+   *  HTTP/1.1 401 Not Found
+   *  {
+   *    "message": "账号未登录，请登录账号！"
+   *  }
+   */
+  .post('/user', user.created)
+  /**
+   * @api {post} /api/login 用户登录
+   * 
+   * @apiName login
+   * @apiGroup Users
+   *
+   * @apiParamExample {json} Request-Example:
+   *  {
+   *    "username": "admin",
+   *    "password": "admin"
+   *  }
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   * HTTP/1.1 200 OK
+   *  {
+   *    "updated_at": "2018/08/13 00:55:17",
+   *    "created_at": "2018/08/13 00:55:17",
+   *    "name": "",
+   *    "admin": false,
+   *    "bio": "",
+   *    "location": "",
+   *    "organization": "",
+   *    "preferred_language": "",
+   *    "avatar": "",
+   *    "linkedin": "",
+   *    "skype": "",
+   *    "state": "active",
+   *    "id": 2,
+   *    "username": "wcji232",
+   *    "email": "wowohoo@gmai.com",
+   *    "public_email": "ss@qq.com",
+   *    "password": "admin",
+   *    "web_url": "http://foo.com"
+   *  }
+   *
+   * @apiErrorExample {json} Error-Response:
+   *  HTTP/1.1 401 Not Found
+   *  {
+   *    "message": "用户名或密码错误！"
+   *  }
+   */
   .post('/user/login', user.login)
-  .post('/user', user.created);
 
 module.exports = router;

@@ -122,8 +122,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       defaultValue: '',
       validate: {
-        isEmail: { args: true, msg: '请输入正确的邮箱！' }
+        isEmail: { args: true, msg: 'Please enter your vaild email!' }
       },
+      unique: { msg: 'The mailbox is repeated.' },
       comment: 'user email'
     },
     public_email: {
@@ -135,7 +136,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       comment: '公开的邮箱'
     },
-    avatar_url: {
+    avatar: {
       type: DataTypes.STRING,
       defaultValue: '',
       validate: {

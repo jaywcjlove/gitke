@@ -7,9 +7,6 @@ module.exports = {
   login: async (ctx) => {
     const { username, password } = ctx.request.body;
     try {
-      if (ctx.session.token) {
-        return ctx.body = ctx.session.userInfo;
-      }
       if (!username || !password) {
         ctx.throw(401, '用户名或密码为空！');
       }
@@ -55,18 +52,9 @@ module.exports = {
     }
   },
   logout: async (ctx) => {
-    try {
-      if (ctx.session.token) {
-        delete ctx.session.token;
-        delete ctx.session.userInfo;
-        ctx.body = { message: '您已退出登录'};
-      } else {
-        ctx.throw(401, '用户没有登录');
-      }
-    } catch (err) {
-      ctx.response.status = err.statusCode || err.status || 500;
-      ctx.body = { message: err.message }
-    }
+    delete ctx.session.token;
+    delete ctx.session.userInfo;
+    ctx.body = { message: '您已退出登录' };
   },
   list: async (ctx) => {
     let { page = 1, limit = 10 } = ctx.request.query

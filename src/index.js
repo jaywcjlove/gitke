@@ -69,18 +69,28 @@ app.on('error', function (err) {
 
 require('./routes')(app);
 
-Models.sequelize.sync().then(() => {
+Models.sequelize.sync().then(async () => {
+  const password = crypto.createHmac('sha256', 'admin').digest('hex');
   // 初始化管理员账号
-  return Models.users.findById(1).then((ind) => {
-    if (!ind) {
-      password = crypto.createHmac('sha256', 'admin').digest('hex');
-      return Models.users.bulkCreate([
-        { id: 1, username: 'admin', admin: true, password, email: 'admin@admin.com' },
-      ], { logging: false }).then(function () {
-        console.log('  > 管理员信息初始化成功');
-      });
+  const users = await Models.users.findOrCreate({
+    where: {id: 1},
+    defaults: {
+      username: 'admin',
+      admin: true,
+      password,
+      email: 'admin@admin.com',
     }
-  })
+  });
+  if (users && users.length > 0 && users[0].id) {
+    await Models.namespaces.findOrCreate({
+      where: { id: 1 },
+      defaults: {
+        name: users[0].username,
+        path: users[0].username,
+        owner_id: users[0].id,
+      }
+    });
+  }
 }).then(async () => {
   app.listen(2018);
   console.log('  > listening on port http://127.0.0.1:2018');
