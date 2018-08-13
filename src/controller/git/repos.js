@@ -37,4 +37,33 @@ module.exports = {
       ctx.body = { message: err.message, ...err }
     }
   },
+  list: async (ctx) => {
+    const { username } = ctx.params;
+    let { page = 1, limit = 10 } = ctx.request.query
+    page = parseInt(page || 1, 10);
+    limit = parseInt(limit || 10, 10);
+    const offset = (page - 1) * limit;
+    const params = { limit, offset, order: [['id', 'DESC']] };
+    params.where = { ...ctx.request.query };
+    delete params.where.limit;
+    delete params.where.page;
+    params.include = [{
+      model: Models.users,
+      as: 'owner',
+      attributes: { exclude: ['password'] }
+    }];
+    try {
+      const users = await Models.users.findOne({ where: { username } });
+      if (!users) ctx.throw(404, `Username ${username} does not exist`)
+      params.where.creator_id = users.id;
+      const data = await Models.projects.findAndCount(params);
+      const pages = parseInt((data.count + limit - 1) / limit); // 总页数
+      ctx.body = { page, pages, limit, ...data }
+    } catch (err) {
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
+  },
+  orgList: async (ctx) => {},
+  detail: async (ctx) => {}
 }

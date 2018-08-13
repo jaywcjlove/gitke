@@ -41,6 +41,6 @@ fs.readdirSync(path.resolve(__dirname, '../src/model'))
 
 Models.namespaces.belongsTo(Models.users, { foreignKey: 'owner_id' });
 Models.projects.belongsTo(Models.namespaces, { foreignKey: 'namespace_id' });
-Models.projects.belongsTo(Models.users, { foreignKey: 'creator_id' });
+Models.projects.belongsTo(Models.users, { as: 'owner', foreignKey: 'creator_id' });
 
 module.exports = Models;

@@ -5,12 +5,12 @@ const router = new Router({
   prefix: '/api'
 });
 
-
 /**
  * @apiDefine UserInfo
  * @apiSuccess {Number} id 用户ID.
  * @apiSuccess {String} username 用户名
  * @apiSuccess {String} email 邮箱
+ * @apiSuccess {String} public_email 公开邮箱
  * @apiSuccess {String} created_at 创建时间
  * @apiSuccess {String} updated_at 更新时间
  */
@@ -22,6 +22,7 @@ router
    * 
    * @apiName getUserVerify
    * @apiGroup Users
+   * 
    *
    * @apiUse UserInfo
    * 
@@ -74,6 +75,24 @@ router
    * 
    * @apiName created
    * @apiGroup Users
+   * 
+   * @apiParam {String} username 用户名
+   * @apiParam {String} name 姓名
+   * @apiParam {String} password 密码
+   * @apiParam {String} email 邮箱
+   * @apiParam {String} public_email 公开邮箱
+   * @apiParam {String} bio 介绍
+   * @apiParam {String} [state=active]  介绍
+   * @apiParam {String} admin=false 管理员
+   * @apiParam {String} [location] 位置，如：`中国，上海`
+   * @apiParamExample {json} Request-Example:
+   *  {
+   *    "username": "wcji232",
+   *    "email": "wowohoo@gmai.com",
+   *    "public_email": "ss@qq.com",
+   *    "password": "admin",
+   *    "web_url": "http://foo.com"
+   *  }
    * 
    * @apiSuccessExample {json} Success-Response:
    * HTTP/1.1 200 OK
