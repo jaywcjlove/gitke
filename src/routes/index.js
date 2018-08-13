@@ -13,4 +13,5 @@ module.exports = (app) => {
   })
   app.use(require('./user').routes());
   app.use(require('./git/repos').routes());
+  app.use(require('./git/namespaces').routes());
 }

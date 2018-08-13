@@ -7,7 +7,7 @@ const router = new Router({
 
 router
   /**
-   * @api {get} /users/:username/repos 项目列表
+   * @api {get} /users/:username/repos 用户，项目列表
    * 
    * @apiName getRepos
    * @apiGroup Git
@@ -72,7 +72,7 @@ router
    */
   .get('/users/:username/repos', repos.list)
   /**
-   * @api {POST} /user/repos 用户创建仓库
+   * @api {POST} /user/repos 用户创建项目
    * 
    * @apiName CreateRepos
    * @apiGroup Git
@@ -120,7 +120,7 @@ router
    */
   .get('/repos/:owner/:repo', repos.detail)
   /**
-   * @api {get} /orgs/:org/repos 组仓列表
+   * @api {get} /orgs/:org/repos 组,项目列表
    * 
    * @apiName getOrgRepos
    * @apiGroup Git
@@ -135,7 +135,7 @@ router
    *  }
    * 
    */
-  .get('/orgs/:org/repos', repos.orgList)
+  .get('/orgs/:org/repos', repos.orgReposList)
   /**
    * @api {POST} /orgs/:org/repos 组织创建仓库
    * 

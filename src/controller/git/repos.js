@@ -64,16 +64,14 @@ module.exports = {
       ctx.body = { message: err.message, ...err }
     }
   },
-  orgList: async (ctx) => {},
+  orgReposList: async (ctx) => {
+    const { username } = ctx.params;
+  },
   detail: async (ctx) => {
     const { owner, repo } = ctx.params;
     try {
       const namespaces = await Models.namespaces.findOne({ where: { name: owner } });
       if (!namespaces) ctx.throw(404, `Owner ${owner} does not exist`);
-      // const projects = await Models.projects.findOne({
-      //   where: { namespace_id: namespaces.id, name: repo },
-      //   include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
-      // });
       ctx.body = await Models.projects.findOne({
         where: { namespace_id: namespaces.id, name: repo },
         include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
