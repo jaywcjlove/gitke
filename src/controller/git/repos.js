@@ -54,7 +54,7 @@ module.exports = {
     }];
     try {
       const users = await Models.users.findOne({ where: { username } });
-      if (!users) ctx.throw(404, `Username ${username} does not exist`)
+      if (!users) ctx.throw(404, `Username ${username} does not exist`);
       params.where.creator_id = users.id;
       const data = await Models.projects.findAndCount(params);
       const pages = parseInt((data.count + limit - 1) / limit); // 总页数
@@ -65,5 +65,22 @@ module.exports = {
     }
   },
   orgList: async (ctx) => {},
-  detail: async (ctx) => {}
+  detail: async (ctx) => {
+    const { owner, repo } = ctx.params;
+    try {
+      const namespaces = await Models.namespaces.findOne({ where: { name: owner } });
+      if (!namespaces) ctx.throw(404, `Owner ${owner} does not exist`);
+      // const projects = await Models.projects.findOne({
+      //   where: { namespace_id: namespaces.id, name: repo },
+      //   include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
+      // });
+      ctx.body = await Models.projects.findOne({
+        where: { namespace_id: namespaces.id, name: repo },
+        include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
+      });
+    } catch (err) {
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
+  }
 }

@@ -6,6 +6,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       unique: { msg: 'The name is repeated.' },
       allowNull: false,
+      unique: { msg: '名称已存在，请勿重复提交' },
       comment: '名字'
     },
     path: {

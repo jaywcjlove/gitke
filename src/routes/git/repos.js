@@ -109,9 +109,8 @@ router
    * @apiName getRepo
    * @apiGroup Git
    *
-   * @apiParamExample {json} Request-Example:
-   *  {
-   *  }
+   * @apiParam {String} :owner 命名空间名称，如用户名称，或者组织名称
+   * @apiParam {String} :repo 仓库名称
    *
    * @apiSuccessExample {json} Success-Response:
    * HTTP/1.1 200 OK
