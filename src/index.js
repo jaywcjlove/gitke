@@ -38,13 +38,6 @@ app.use(cors());
 app.use(koaBody());
 app.use(json());
 
-// 404 页面跳转到首页
-app.use(async (ctx, next) => {
-  await next();
-  if (ctx.body || !ctx.idempotent) return;
-  ctx.redirect('/index.html');
-});
-
 app.use(static(path.join(__dirname, '..', 'public')));
 
 // 忽略打印资源加载
@@ -69,6 +62,17 @@ app.on('error', function (err) {
 
 require('./routes')(app);
 
+// 404 页面跳转到首页
+app.use(async (ctx, next) => {
+  if (/^\/api/.test(ctx.path)) {
+    ctx.response.status = 404;
+    ctx.body = { message: `Api '${ctx.path}' does not exist!` };
+  } else {
+    ctx.redirect('/index.html');
+  }
+  await next();
+});
+
 Models.sequelize.sync().then(async () => {
   const password = crypto.createHmac('sha256', 'admin').digest('hex');
   // 初始化管理员账号
@@ -76,6 +80,7 @@ Models.sequelize.sync().then(async () => {
     where: {id: 1},
     defaults: {
       username: 'admin',
+      name: 'admin',
       admin: true,
       password,
       email: 'admin@admin.com',
