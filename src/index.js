@@ -4,6 +4,7 @@ const Koa = require('koa');
 const logger = require('koa-logger')
 const cors = require('@koa/cors');
 const json = require('koa-json');
+const bodyParser = require('koa-bodyparser');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const static = require('koa-static');
@@ -36,6 +37,7 @@ app.use(session({
 
 app.use(cors());
 app.use(koaBody());
+app.use(bodyParser());
 app.use(json());
 
 app.use(static(path.join(__dirname, '..', 'public')));
@@ -55,7 +57,7 @@ function ignoreAssets(mw) {
 app.use(ignoreAssets(logger()));
 app.on('error', function (err) {
   if (process.env.NODE_ENV != 'test') {
-    console.log('sent error %s to the cloud', err.message);
+    console.log('error: %s', err.message);
     console.log(err);
   }
 });
