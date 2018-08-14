@@ -3,7 +3,6 @@ Gitke
 
 
 ```bash
-git push http://127.0.0.1:2018/jaywcjlove/test.git master
-git push git@127.0.0.1:whd/whd-static.git master
-git push git@localhost:7005:jaywcjlove/whd-static.git master
+git push http://192.168.188.250:2018/owner/repo.git master
+git push git@192.168.188.250:owner/repo.git master
 ```
