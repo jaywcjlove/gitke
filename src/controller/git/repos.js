@@ -27,6 +27,10 @@ module.exports = {
       if (pathExists) ctx.throw(409, `Repos ${name} already exists!`);
       // 初始化一个仓库
       await Git.Repository.init(currentPath, 1);
+      // 生成钩子脚本
+      // "pre-receive":  "#!/usr/bin/env %s\n\"%s\" hook --config='%s' pre-receive\n",
+      // "update":       "#!/usr/bin/env %s\n\"%s\" hook --config='%s' update $1 $2 $3\n",
+      // "post-receive": "#!/usr/bin/env %s\n\"%s\" hook --config='%s' post-receive\n",
       // transaction commit 事务提交
       await transaction.commit();
       ctx.body = projects
