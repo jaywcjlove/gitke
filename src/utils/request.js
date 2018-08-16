@@ -70,6 +70,18 @@ export default function request(url, options = {}) {
         history.push('/login');
         return response.data;
       }
+      if (response.status === 403) {
+        history.push('/exception/403');
+        return;
+      }
+      if (response.status <= 504 && response.status >= 500) {
+        history.push('/exception/500');
+        return;
+      }
+      if (response.status >= 404 && response.status < 422) {
+        history.push('/exception/404');
+        return;
+      }
       const errortext = message || codeMessage[response.status] || response.statusText;
       if (errortext) {
         Notification.error({

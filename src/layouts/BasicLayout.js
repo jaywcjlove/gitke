@@ -31,7 +31,11 @@ class BasicLayout extends PureComponent {
     this.state = {};
   }
   componentDidMount() {
-    this.props.verify();
+    const { location } = this.props;
+    // 错误页面不做登录请求验证
+    if (!/^\/exception\//.test(location.pathname)) {
+      this.props.verify();
+    }
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     window.scrollTo(0, 0);
