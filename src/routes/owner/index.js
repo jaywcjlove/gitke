@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from './index.less';
 
-export default class Join extends PureComponent {
+export default class Owner extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -9,7 +9,7 @@ export default class Join extends PureComponent {
   render() {
     return (
       <div className={styles.warpper}>
-        Join页面
+        owner/group
       </div>
     );
   }

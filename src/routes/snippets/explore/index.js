@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from './index.less';
 
-export default class Create extends PureComponent {
+export default class Home extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -9,7 +9,7 @@ export default class Create extends PureComponent {
   render() {
     return (
       <div className={styles.warpper}>
-        new
+        snippets/explore
       </div>
     );
   }

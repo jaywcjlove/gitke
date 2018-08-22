@@ -51,8 +51,8 @@ export const getRouterData = () => {
     '/dashboard/repositories': {
       component: dynamicWrapper([], () => import('../routes/dashboard/repositories')),
     },
-    '/dashboard/groups': {
-      component: dynamicWrapper([], () => import('../routes/dashboard/groups')),
+    '/dashboard/stars': {
+      component: dynamicWrapper([], () => import('../routes/dashboard/stars')),
     },
     '/dashboard/issues': {
       component: dynamicWrapper([], () => import('../routes/dashboard/issues')),
@@ -63,15 +63,24 @@ export const getRouterData = () => {
     '/new': {
       component: dynamicWrapper([], () => import('../routes/new')),
     },
-    '/groups/new': {
-      component: dynamicWrapper([], () => import('../routes/groups/new')),
+    '/organizations/new': {
+      component: dynamicWrapper([], () => import('../routes/organizations/new')),
     },
-    '/explore/groups': {
-      component: dynamicWrapper([], () => import('../routes/explore/groups')),
+    '/organizations/overview': {
+      component: dynamicWrapper([], () => import('../routes/organizations/overview')),
+    },
+    '/explore/repositories': {
+      component: dynamicWrapper([], () => import('../routes/explore/repositories')),
+    },
+    '/explore/organizations': {
+      component: dynamicWrapper([], () => import('../routes/explore/organizations')),
     },
     // 代码片段
     '/snippets': {
       component: dynamicWrapper([], () => import('../routes/snippets')),
+    },
+    '/snippets/explore': {
+      component: dynamicWrapper([], () => import('../routes/snippets/explore')),
     },
     '/snippets/:owner/:id': {
       component: dynamicWrapper([], () => import('../routes/snippets/details')),
@@ -92,10 +101,16 @@ export const getRouterData = () => {
       component: dynamicWrapper([], () => import('../routes/help')),
     },
     '/:owner': {
-      component: dynamicWrapper(['account'], () => import('../routes/login')),
+      component: dynamicWrapper(['account'], () => import('../routes/owner')),
+    },
+    '/:owner/profile/groups': {
+      component: dynamicWrapper(['account'], () => import('../routes/owner/groups')),
+    },
+    '/:owner/profile/stars': {
+      component: dynamicWrapper(['account'], () => import('../routes/owner/stars')),
     },
     '/:owner/:repo': {
-      component: dynamicWrapper(['account'], () => import('../routes/login')),
+      component: dynamicWrapper(['account'], () => import('../routes/repo')),
     },
   };
   return conf;

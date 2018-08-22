@@ -9,7 +9,7 @@ export default class Home extends PureComponent {
   render() {
     return (
       <div className={styles.warpper}>
-        help
+        explore/groups
       </div>
     );
   }

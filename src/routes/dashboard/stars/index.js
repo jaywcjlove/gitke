@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-export default class Groups extends PureComponent {
+export default class Snippets extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -8,7 +8,7 @@ export default class Groups extends PureComponent {
   render() {
     return (
       <div>
-        Dashboard Groups
+        Dashboard Stars
       </div>
     );
   }

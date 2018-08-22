@@ -3,13 +3,13 @@ import Icon from '../components/Icon/Menu';
 
 const menuData = [
   {
-    name: 'Gitke',
+    name: 'GitKe',
     // icon: 'safety',
     icon: <Icon type="overview" />,
     path: 'dashboard',
     children: [
       {
-        name: 'Your work',
+        name: 'Your Repos',
         icon: <Icon type="overview" />,
         path: 'overview',
       },
@@ -17,6 +17,11 @@ const menuData = [
         name: 'Repositories',
         icon: <Icon type="repositories" />,
         path: 'repositories',
+      },
+      {
+        name: 'Stars',
+        icon: <Icon type="stars" />,
+        path: 'stars',
       },
       {
         name: 'Issues',
@@ -28,10 +33,39 @@ const menuData = [
         icon: <Icon type="pullrequests" />,
         path: 'pullrequests',
       },
+    ],
+  },
+  {
+    name: 'Organizations',
+    icon: <Icon type="organizations" />,
+    path: 'organizations',
+    children: [
       {
-        name: 'Snippets',
-        icon: <Icon type="snippets" />,
-        path: 'snippets',
+        name: 'Your Organization',
+        icon: <Icon type="organizations" />,
+        path: 'overview',
+      },
+      {
+        name: 'Explore Organization',
+        icon: <Icon type="organizations" />,
+        path: 'organizations',
+      },
+    ],
+  },
+  {
+    name: 'Explore',
+    icon: <Icon type="explore" />,
+    path: 'explore',
+    children: [
+      {
+        name: 'Repositories',
+        icon: <Icon type="repositories" />,
+        path: 'repositories',
+      },
+      {
+        name: 'Organizations',
+        icon: <Icon type="organizations" />,
+        path: 'organizations',
       },
     ],
   },
@@ -39,6 +73,39 @@ const menuData = [
     name: 'Snippets',
     icon: <Icon type="snippets" />,
     path: 'snippets',
+    children: [
+      {
+        name: 'Your Snippets',
+        path: 'repositories',
+      },
+      {
+        name: 'Explore Snippets',
+        path: 'organizations',
+      },
+    ],
+  },
+  {
+    name: 'owner',
+    icon: <Icon type="snippets" />,
+    // /:owner/:repo 菜单
+    isrepo: true,
+    children: [
+      {
+        name: 'Repositories',
+        icon: <Icon type="repositories" />,
+        path: 'repositories',
+      },
+      {
+        name: 'Group',
+        icon: <Icon type="repositories" />,
+        path: 'groups',
+      },
+      {
+        name: 'Stars',
+        icon: <Icon type="stars" />,
+        path: 'stars',
+      },
+    ],
   },
   {
     name: 'User Settings',
@@ -77,6 +144,7 @@ function isUrl(path) {
 }
 function formatter(data, parentPath = '/', parentAuthority) {
   return data.map((item) => {
+    if (item.isrepo) return null;
     let { path } = item;
     if (!isUrl(path)) {
       path = parentPath + item.path;
@@ -93,4 +161,4 @@ function formatter(data, parentPath = '/', parentAuthority) {
   });
 }
 
-export const getMenuData = () => formatter(menuData);
+export const getMenuData = () => formatter(menuData).filter(item => item);

@@ -2,6 +2,7 @@ sql-data
 node_modules
 package-lock.json
 npm-debug.log*
+dist
 .gitke-data
 .DS_Store
 .cache
