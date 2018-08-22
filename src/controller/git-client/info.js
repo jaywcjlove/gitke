@@ -1,15 +1,10 @@
 
-const crypto = require('crypto');
 const path = require('path');
 const spawn = require('child_process').spawn;
 const through = require('through2');
-const Models = require('../../../conf/sequelize');
-const conf = require('../../../conf/conf');
+const debug = require('debug')('git:handler:info');
+const { existsRepo } = require('../../utils/fsExtra');
 
-function pack(s) {
-  var n = (4 + s.length).toString(16);
-  return Array(4 - n.length + 1).join('0') + n + s;
-}
 
 /**
  * git-receive-pack - Receive what is pushed into the repository [push]
@@ -17,63 +12,71 @@ function pack(s) {
  */
 const services = ['upload-pack', 'receive-pack'];
 
-module.exports = async (ctx) => {
+exports.auth = async (ctx, next) => {
   const { service } = ctx.request.query;
+  ctx.response.status = 200;
   try {
-    if (!service) {
-      ctx.throw(404, 'service parameter required');
-    }
+    ctx.assert(service, 404, 'service parameter required');
     const serviceType = service.replace(/^git-/, '');
-    if (services.indexOf(serviceType) < 0) {
-      ctx.set('Content-Type', 'text/plain');
-      ctx.throw(405, 'service not available');
-    }
+    ctx.state.serviceType = serviceType;
+    ctx.assert(services.indexOf(serviceType) > -1, 405, 'service not available');
+    // 仓库绝对路径
+    ctx.state.repoNamePath = path.join(ctx.state.conf.reposPath, ctx.params.owner, `${ctx.params.repo}`);
     ctx.set('content-type', `application/x-git-${serviceType}-result`);
-
-    if (!ctx.headers["authorization"]) {
-      ctx.set('Content-Type', 'text/plain');
-      ctx.set('WWW-Authenticate', 'Basic realm="."');
-      ctx.response.status = 401;
-      ctx.response.body = 'Unauthorized';
-      return;
-    }
-
-    const tokens = ctx.headers["authorization"].split(" ");
-    let username;
-    let password;
-    if (tokens[0] === "Basic") {
-      const splitHash = new Buffer.from(tokens[1], 'base64').toString('utf8').split(":");
-      username = splitHash.shift();
-      password = splitHash.join(":");
-    }
-
-    const cryptoPassword = crypto.createHmac('sha256', password).digest('hex');
-    const account = await Models.users.findOne({
-      attributes: { exclude: ['password'] },
-      where: { username, password: cryptoPassword }
-    });
-    if (!account) {
-      ctx.set('Content-Type', 'text/plain');
-      ctx.throw(401, 'Account verification failed!');
-    }
-    const repoNamePath = path.join(conf.reposPath, ctx.params.owner, `${ctx.params.repo}`);
-
-    const dup = through();
-    dup.write(pack('# service=git-' + serviceType + '\n'));
-    dup.write('0000');
-
-    const cmd = ['git-' + serviceType, '--stateless-rpc', '--advertise-refs', repoNamePath];
-    const ps = spawn(cmd[0], cmd.slice(1));
-    ps.stdout.pipe(dup);
-    ps.on('error', (err) => {
-      err.cmd = cmd.join(' ');
-      ctx.throw(err);
-    });
-    ps.stdout.pipe(dup);
-    ctx.set('content-type', 'application/x-git-' + serviceType + '-advertisement');
-    ctx.body = dup;
+    const isExistsDir = await existsRepo(ctx.state.repoNamePath);
+    ctx.assert(isExistsDir, 404, 'Repository not found.');
+    next();
   } catch (err) {
-    ctx.response.status = err.statusCode || err.status || 500;
-    ctx.response.body = err.message;
+    ctx.status = err.statusCode || err.status || 500;
+    ctx.body = err.message;
   }
+}
+
+exports.authorization = async (ctx, next) => {
+  if (!ctx.headers["authorization"]) {
+    ctx.set('WWW-Authenticate', 'Basic realm="."');
+    ctx.set('Content-Type', `application/x-git-${ctx.state.serviceType}-result`);
+    ctx.status = 401;
+    ctx.body = 'Unauthorized';
+    return;
+  }
+  next();
+}
+
+exports.noCache = async (ctx, next) => {
+  const { serviceType } = ctx.state;
+  if (serviceType) {
+    ctx.set('Content-Type', `application/x-git-${serviceType}-advertisement`);
+    ctx.set('expires', 'Fri, 01 Jan 1980 00:00:00 GMT');
+    ctx.set('pragma', 'no-cache');
+    ctx.set('cache-control', 'no-cache, max-age=0, must-revalidate');
+    next();
+  } else {
+    ctx.response.status = 402;
+    ctx.response.body = 'service parameter required';
+  }
+}
+
+function pack(s) {
+  var n = (4 + s.length).toString(16);
+  return Array(4 - n.length + 1).join('0') + n + s;
+}
+
+exports.serviceRespond = async (ctx) => {
+  const { serviceType, repoNamePath } = ctx.state;
+  const dup = through();
+  dup.write(pack('# service=git-' + serviceType + '\n'));
+  dup.write('0000');
+
+  const cmd = ['git-' + serviceType, '--stateless-rpc', '--advertise-refs', repoNamePath];
+  debug('run %s', cmd);
+  const ps = spawn(cmd[0], cmd.slice(1));
+  ps.on('error', (err) => {
+    err.cmd = cmd.join(' ');
+    ctx.throw(err);
+  });
+  ps.stdout.pipe(dup);
+
+  ctx.set('content-type', 'application/x-git-' + serviceType + '-advertisement');
+  ctx.body = dup;
 }

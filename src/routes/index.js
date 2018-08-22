@@ -1,8 +1,10 @@
 const authLoginToAPI = require('../middleware/authLoginToAPI');
+const conf = require('../../conf/conf');
 
 module.exports = (app) => {
+  app.git = conf;
   app.use(async (ctx, next) => {
-    console.log('ctx:', ctx.url);
+    ctx.state.conf = conf;
     await next();
   });
   // Git 相关路由

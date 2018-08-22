@@ -18,11 +18,7 @@ app.keys = ['gitke:session'];
 app.use(session({
   secret: 'gitke:cat',
   saveUninitialized: false,
-  store: new SequelizeStore(Models.sequelize,{
-    get: () => {
-      console.log('test');
-    }
-  }),
+  store: new SequelizeStore(Models.sequelize, {}),
   cookie: {
     httpOnly: false, // key
     // maxAge: null,
@@ -55,12 +51,6 @@ function ignoreAssets(mw) {
 }
 
 app.use(ignoreAssets(logger()));
-app.on('error', function (err) {
-  if (process.env.NODE_ENV != 'test') {
-    console.log('error: %s', err.message);
-    console.log(err);
-  }
-});
 
 require('./routes')(app);
 

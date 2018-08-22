@@ -2,8 +2,8 @@ const path = require('path');
 const FS = require('fs-extra');
 const home = require('os-homedir');
 
-// const cachPath = path.join(home(), 'gitke-data');
-const cachPath = path.join(__dirname, '..', '.gitke-data');
+const cachPath = path.join(home(), '.gitke-data');
+// const cachPath = path.join(__dirname, '..', '.gitke-data');
 
 FS.ensureDir(cachPath);
 

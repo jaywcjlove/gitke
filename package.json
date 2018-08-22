@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node src/index.js",
     "api": "apidoc -i src/ -o doc/",
-    "dev": "DEBUG=GITKE:* nodemon src/index.js"
+    "dev": "DEBUG=git:* nodemon src/index.js"
   },
   "keywords": [
     "git"
@@ -32,6 +32,7 @@
     "@koa/cors": "^2.2.2",
     "dayjs": "^1.7.5",
     "fs-extra": "^7.0.0",
+    "git-side-band-message": "0.0.3",
     "koa": "^2.5.2",
     "koa-body": "^4.0.4",
     "koa-bodyparser": "^4.2.1",
