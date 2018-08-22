@@ -1,0 +1,4 @@
+[submodule "public"]
+	path = public
+	url = git@github.com:jaywcjlove/gitke.git
+	branch = gh-pages

@@ -7,6 +7,7 @@ const json = require('koa-json');
 const bodyParser = require('koa-bodyparser');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
+const view = require('koa-view');
 const static = require('koa-static');
 
 const SequelizeStore = require('koa-generic-session-sequelize');
@@ -35,7 +36,7 @@ app.use(cors());
 app.use(koaBody());
 app.use(bodyParser());
 app.use(json());
-
+app.use(view(path.join(process.cwd(), 'public')));
 app.use(static(path.join(__dirname, '..', 'public')));
 
 // 忽略打印资源加载
@@ -60,7 +61,7 @@ app.use(async (ctx, next) => {
     ctx.response.status = 404;
     ctx.body = { message: `Api '${ctx.path}' does not exist!` };
   } else {
-    ctx.redirect('/index.html');
+    ctx.render('index');
   }
   await next();
 });

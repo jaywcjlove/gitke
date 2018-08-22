@@ -15,7 +15,10 @@ module.exports = (app) => {
   // 不需要验证的路由
   app.use(authLoginToAPI([
     '/api/user/login', '/api/user/logout', '/api/user/verify'
-  ]));
+  ], {
+    // 包含需要验证的 path
+    includes: [/^\/api/],
+  }));
   app.use(require('./user').routes());
   app.use(require('./git/repos').routes());
   app.use(require('./git/namespaces').routes());
