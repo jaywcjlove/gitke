@@ -1,8 +1,7 @@
 // import request from '../utils/request';
 
-export const global = {
+export const repo = {
   state: {
-    test: '测试全局State',
   },
   reducers: {
     updateState(state, payload) {

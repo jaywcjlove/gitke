@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getMenuData } from '../common/menu';
 import Container from '../components/Container';
 import GlobalHeader from '../components/GlobalHeader';
+import SubMenuContainer from '../components/SubMenuContainer';
 // import styles from './BasicLayout.less';
 
 // const socket = new WebSocket(`ws://${location.host}/api/ws`);
@@ -28,7 +29,9 @@ getMenuData().forEach(getRedirect);
 class BasicLayout extends PureComponent {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      resetProps: {},
+    };
   }
   componentDidMount() {
     const { location } = this.props;
@@ -89,10 +92,8 @@ class BasicLayout extends PureComponent {
   render() {
     const { routerData, userData } = this.props;
     const RouteComponents = [];
-    const RouteComponentsPath = [];
     // 重定向地址
     redirectData.forEach((item, idx) => {
-      RouteComponentsPath.push(item.from);
       RouteComponents.push(<Redirect key={idx} exact from={item.from} to={item.to} />);
     });
     // 根路径重定向
@@ -100,16 +101,30 @@ class BasicLayout extends PureComponent {
     Object.keys(routerData).forEach((path, idx) => {
       if (path !== '/') {
         const Comp = routerData[path].component;
-        // RouteComponentsPath.push(path);
         // Comp组件，可以给子组件传一些参数
         RouteComponents.push(
-          <Route exact key={idx + 1} path={path} render={props => <Comp breadcrumb={this.getRouteBreadcrumb()} {...props} />} />
+          <Route
+            exact
+            key={idx + 1}
+            path={path}
+            render={(resetProps) => {
+              this.resetProps = resetProps;
+              const { match } = resetProps;
+              let repoName = '';
+              if (match.params.owner && match.params.repo) repoName = match.params.repo;
+              return (
+                <SubMenuContainer repoName={repoName} menuData={getMenuData()} {...this.props} {...resetProps}>
+                  <GlobalHeader breadcrumb={this.getRouteBreadcrumb()} userData={userData} token={this.props.token} />
+                  <Comp breadcrumb={this.getRouteBreadcrumb()} {...resetProps} />
+                </SubMenuContainer>
+              );
+            }}
+          />
         );
       }
     });
     return (
-      <Container menuData={getMenuData()} {...this.props}>
-        <GlobalHeader breadcrumb={this.getRouteBreadcrumb()} userData={userData} token={this.props.token} />
+      <Container menuData={getMenuData()} {...this.props} {...this.resetProps}>
         <Switch>
           {RouteComponents}
           <Route render={() => <Redirect to="/dashboard/overview" />} />

@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
-import styles from './index.less';
 
-export default class Owner extends PureComponent {
+export default class Issue extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
   }
   render() {
     return (
-      <div className={styles.warpper}>
-        Owner or Organizations
+      <div>
+        Repo/Issue
       </div>
     );
   }

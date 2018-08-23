@@ -1,0 +1,46 @@
+.sidebarAuto {
+  transition: all .3s;
+  position: fixed;
+  background: #343a40;
+  width: 206px;
+  left: 64px;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  .title {
+    color: #fff;
+    font-size: 18px;
+    padding: 16px 0 10px 14px;
+  }
+  :global {
+    .w-menu-vertical {
+      border-right: 0;
+    }
+    .w-menu-inline {
+      border-right: 0;
+    }
+    .w-menu-item {
+      line-height: 38px;
+      svg, span {
+        vertical-align: middle;
+      }
+      svg {
+        width: 21px;
+        height: 21px;
+        margin-right: 5px;
+      }
+    }
+    .w-menu-dark .w-menu-item.active {
+      background-color: rgba(4, 4, 4, 0.3);
+    }
+    .w-sub-menu-title:hover {
+      svg {
+        fill: #0fa120;
+      }
+    }
+  }
+}
+
+.container {
+  padding-left: 270px;
+}

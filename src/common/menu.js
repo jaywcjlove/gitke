@@ -85,25 +85,32 @@ const menuData = [
     ],
   },
   {
-    name: 'owner',
-    icon: <Icon type="snippets" />,
-    // /:owner/:repo 菜单
-    isrepo: true,
+    path: '_:owner_:repo',
     children: [
       {
-        name: 'Repositories',
+        name: 'Code',
         icon: <Icon type="repositories" />,
-        path: 'repositories',
+        path: '',
       },
       {
-        name: 'Group',
-        icon: <Icon type="repositories" />,
-        path: 'groups',
+        name: 'Issues',
+        icon: <Icon type="issues" />,
+        path: 'issues',
       },
       {
-        name: 'Stars',
-        icon: <Icon type="stars" />,
-        path: 'stars',
+        name: 'Pull Requests',
+        icon: <Icon type="pullrequests" />,
+        path: 'pulls',
+      },
+      {
+        name: 'Wiki',
+        icon: <Icon type="wiki" />,
+        path: 'wiki',
+      },
+      {
+        name: 'Settings',
+        icon: <Icon type="settings" />,
+        path: 'settings',
       },
     ],
   },
@@ -130,10 +137,6 @@ const menuData = [
       },
     ],
   },
-  {
-    name: '用户管理',
-    path: 'user',
-  },
 ];
 
 
@@ -144,7 +147,6 @@ function isUrl(path) {
 }
 function formatter(data, parentPath = '/', parentAuthority) {
   return data.map((item) => {
-    if (item.isrepo) return null;
     let { path } = item;
     if (!isUrl(path)) {
       path = parentPath + item.path;
