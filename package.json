@@ -21,7 +21,7 @@
     "react-dynamic-loadable": "^1.0.8",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "uiw": "^1.15.9"
+    "uiw": "^1.15.10"
   },
   "devDependencies": {
     "kkt": "1.9.x"
