@@ -11,10 +11,9 @@ router
    * 
    * @apiName getOrgRepos
    * @apiGroup Git
-   *
-   * @apiParamExample {json} Request-Example:
-   *  {
-   *  }
+   * @apiParam {String} [type='Group'] Group 为组，null为个人组，都被认为是命名空间
+   * @apiParam {String} [username] 用户名，不传递默认为自己
+   * 
    *
    * @apiSuccessExample {json} Success-Response:
    * HTTP/1.1 200 OK
