@@ -79,7 +79,6 @@ router
    *
    * @apiParamExample {json} Request-Example:
    *  {
-   *    "namespace_id": 11,
    *    "name": "test2",
    *    "description": ""
    *  }

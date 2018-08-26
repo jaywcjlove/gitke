@@ -6,19 +6,22 @@ const { reposPath } = require("../../../conf/conf");
 
 module.exports = {
   created: async (ctx) => {
-    const { name, namespace_id } = ctx.request.body;
+    const { name } = ctx.request.body;
+    const { userInfo } = ctx.session;
     let transaction;
     try {
       // 托管事务
       transaction = await Models.sequelize.transaction();
       const namespaces = await Models.namespaces.findOne({
-        where: { id: namespace_id }
+        where: { owner_id: userInfo.id },
+        transaction,
       });
       if (!namespaces) ctx.throw(404, 'The namespace does not exist.');
 
       const bodyData = ctx.request.body;
       if (!bodyData.path) bodyData.path = name;
       bodyData.creator_id = ctx.session.userInfo.id;
+      bodyData.namespace_id = namespaces.id;
       // 创建仓库信息
       const projects = await Models.projects.create(bodyData, { transaction });
       // 验证仓库是否存在
