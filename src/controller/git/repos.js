@@ -2,7 +2,6 @@ const Git = require("nodegit");
 const PATH = require("path");
 const FS = require('fs-extra')
 const Models = require('../../../conf/sequelize');
-const { reposPath } = require("../../../conf/conf");
 
 module.exports = {
   created: async (ctx) => {
@@ -24,6 +23,7 @@ module.exports = {
       bodyData.namespace_id = namespaces.id;
       // 创建仓库信息
       const projects = await Models.projects.create(bodyData, { transaction });
+      const { reposPath } = ctx.state.conf;
       // 验证仓库是否存在
       const currentPath = PATH.join(reposPath, namespaces.path, `${name}.git`);
       const pathExists = await FS.pathExists(currentPath);
@@ -79,13 +79,39 @@ module.exports = {
     try {
       const namespaces = await Models.namespaces.findOne({ where: { name: owner } });
       if (!namespaces) ctx.throw(404, `Owner ${owner} does not exist`);
-      ctx.body = await Models.projects.findOne({
+      const repoDetail = await Models.projects.findOne({
         where: { namespace_id: namespaces.id, name: repo },
         include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
       });
+      if (!repoDetail) ctx.throw(404, `Repo ${owner}/${repo} does not exist`);
+      const { reposPath } = ctx.state.conf;
+      const currentRepoPath = PATH.join(reposPath, owner, `${repo}.git`);
+      const gitRepo = await Git.Repository.open(currentRepoPath);
+      repoDetail.setDataValue('isEmpty', gitRepo.isEmpty());
+      ctx.body = repoDetail;
     } catch (err) {
       ctx.response.status = err.statusCode || err.status || 500;
       ctx.body = { message: err.message, ...err }
     }
-  }
+  },
+  readme: async (ctx) => {
+    const { owner, repo } = ctx.params;
+    const { reposPath } = ctx.state.conf;
+    const currentRepoPath = PATH.join(reposPath, owner, `${repo}.git`);
+    try {
+      const gitRepo = await Git.Repository.open(currentRepoPath);
+      if (gitRepo.isEmpty() === 1) {
+        ctx.body = { content: '' };
+        return;
+      }
+      let refCommit = await gitRepo.getReferenceCommit('refs/heads/master');
+      refCommit = await gitRepo.getCommit(refCommit.sha());
+      refCommit = await refCommit.getEntry("README.md");
+      refCommit = await refCommit.getBlob();
+      ctx.body = { content: refCommit.toString() };
+    } catch (err) {
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
+  },
 }

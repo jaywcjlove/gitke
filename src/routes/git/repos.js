@@ -119,6 +119,22 @@ router
    */
   .get('/repos/:owner/:repo', repos.detail)
   /**
+   * @api {get} /repos/:owner/:repo/readme Get README.md
+   * 
+   * @apiDescription 获取仓库中的 README.md 内容
+   * 
+   * @apiName getOrgReadme
+   * @apiGroup Git
+   *
+   * @apiSuccessExample {json} Success-Response:
+   * HTTP/1.1 200 OK
+   *  {
+   *    "content": ""
+   *  }
+   * 
+   */
+  .get('/repos/:owner/:repo/readme', repos.readme)
+  /**
    * @api {get} /orgs/:org/repos 组,项目列表
    * 
    * @apiName getOrgRepos
