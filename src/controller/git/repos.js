@@ -27,7 +27,7 @@ module.exports = {
       // 验证仓库是否存在
       const currentPath = PATH.join(reposPath, namespaces.path, `${name}.git`);
       const pathExists = await FS.pathExists(currentPath);
-      if (pathExists) ctx.throw(409, `Repos ${name} already exists!`);
+      if (pathExists) ctx.throw(423, `Repos ${name} already exists!`);
       // 初始化一个仓库
       await Git.Repository.init(currentPath, 1);
       // 生成钩子脚本
