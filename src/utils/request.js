@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Notification, Message } from 'uiw';
-import history from '../history'; // eslint-disable-line
+import history from '../history';
 import { splitUrl } from './utils.js';
 
 // Get the current location.

@@ -61,7 +61,7 @@ export const getRouterData = () => {
       component: dynamicWrapper([], () => import('../routes/dashboard/pullrequests')),
     },
     '/new': {
-      component: dynamicWrapper([], () => import('../routes/new')),
+      component: dynamicWrapper(['account', 'organizations', 'repo'], () => import('../routes/new')),
     },
     '/organizations/new': {
       component: dynamicWrapper([], () => import('../routes/organizations/new')),
