@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import styles from './Menu.less';
 
 export default class index extends Component {
   render() {

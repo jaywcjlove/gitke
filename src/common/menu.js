@@ -76,11 +76,11 @@ const menuData = [
     children: [
       {
         name: 'Your Snippets',
-        path: 'repositories',
+        path: 'overview',
       },
       {
         name: 'Explore Snippets',
-        path: 'organizations',
+        path: 'explore',
       },
     ],
   },

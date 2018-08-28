@@ -1,6 +1,6 @@
 // import request from '../utils/request';
 
-export const create = {
+export default {
   state: {},
   reducers: {
     updateState(state, payload) {

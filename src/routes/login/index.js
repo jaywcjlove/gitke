@@ -26,7 +26,9 @@ class Login extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const { history } = this.props;
     if (nextProps.userData) {
-      history.push('/');
+      setTimeout(() => {
+        history.push('/');
+      }, 800);
     }
   }
   login() {

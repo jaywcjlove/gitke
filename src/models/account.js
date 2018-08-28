@@ -11,7 +11,7 @@ const getUsername = () => {
   return user;
 };
 
-export const account = {
+export default {
   state: {
     token: getToken(),
     userData: getUsername(),

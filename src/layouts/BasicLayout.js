@@ -5,9 +5,6 @@ import { getMenuData } from '../common/menu';
 import Container from '../components/Container';
 import GlobalHeader from '../components/GlobalHeader';
 import SubMenuContainer from '../components/SubMenuContainer';
-// import styles from './BasicLayout.less';
-
-// const socket = new WebSocket(`ws://${location.host}/api/ws`);
 
 /**
  * 根据菜单取得重定向地址.

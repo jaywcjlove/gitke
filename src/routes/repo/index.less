@@ -1,0 +1,37 @@
+
+.pathDivider {
+  color: #586069;
+  padding: 0 5px;
+  font-weight: normal;
+  a {
+    font-size: 16px;
+    color: #586069;
+    padding: 0 5px;
+    font-weight: normal;
+    vertical-align: initial;
+  }
+}
+
+.title {
+  svg {
+    vertical-align: middle;
+  }
+  & > span {
+    vertical-align: middle;
+  }
+  svg + span {
+    margin-left: 10px;
+  }
+}
+
+.cardReadme {
+  color: red;
+  :global {
+    .w-card-head {
+      height: 32px;
+      line-height: 32px;
+      background-color: #f6f8fa;
+      border-radius: 5px 5px 0 0;
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import request from '../utils/request';
 import history from '../history';
 
-export const repo = {
+export default {
   state: {
-    detail: null,
+    detail: {},
+    readmeContent: '',
   },
   reducers: {
     updateState(state, payload) {
@@ -11,8 +12,15 @@ export const repo = {
     },
   },
   effects: {
-    async getRepoDetail({ username, repoName }) {
-      console.log('username, repo:', username, repoName);
+    async getRepoDetail(options) {
+      const repos = await request(`/api/repos/${options.owner}/${options.repo}`);
+      this.updateState({ detail: repos });
+    },
+    async getRepoDetailReadme(options) {
+      const repos = await request(`/api/repos/${options.owner}/${options.repo}/readme`);
+      if (repos && repos.content) {
+        this.updateState({ readmeContent: repos.content });
+      }
     },
     // 创建一个存储库
     async createRepo(options) {
