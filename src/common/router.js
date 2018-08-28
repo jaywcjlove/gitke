@@ -43,11 +43,8 @@ export const getRouterData = () => {
     '/exception/500': {
       component: dynamicWrapper([], () => import('../routes/exception/500')),
     },
-    '/dashboard/snippets': {
-      component: dynamicWrapper([], () => import('../routes/dashboard/snippets')),
-    },
     '/dashboard/overview': {
-      component: dynamicWrapper([], () => import('../routes/dashboard/overview')),
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/dashboard/overview')),
     },
     '/dashboard/repositories': {
       component: dynamicWrapper([], () => import('../routes/dashboard/repositories')),
@@ -77,7 +74,7 @@ export const getRouterData = () => {
       component: dynamicWrapper([], () => import('../routes/explore/organizations')),
     },
     // 代码片段
-    '/snippets': {
+    '/snippets/overview': {
       component: dynamicWrapper([], () => import('../routes/snippets')),
     },
     '/snippets/explore': {

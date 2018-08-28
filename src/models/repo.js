@@ -5,6 +5,9 @@ export default {
   state: {
     detail: {},
     readmeContent: '',
+    repos: {
+      page: 1, pages: 2, count: 0, rows: [],
+    },
   },
   reducers: {
     updateState(state, payload) {
@@ -30,6 +33,13 @@ export default {
         body: options,
       });
       history.push(`${owner}/${repos.name}`);
+    },
+    async getRepos(options) {
+      const { owner, ...otherOptions } = options;
+      const repos = await request(`/api/users/${owner}/repos`, {
+        body: otherOptions,
+      });
+      this.updateState({ repos });
     },
   },
 };
