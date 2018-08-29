@@ -24,7 +24,7 @@ class DateAgo extends Component {
     else if (_day >= 1) label = `${parseInt(_day, 10)} days ago`;
     else if (_hour >= 1) label = `${parseInt(_hour, 10)} hours ago`;
     else if (_min >= 1) label = `${parseInt(_min, 10)} minutes ago`;
-    else label = 'just';
+    else label = 'Updated just now';
     return (
       <span>{label}</span>
     );

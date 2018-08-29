@@ -10,7 +10,7 @@ export default class Markdown extends Component {
   render() {
     const { source, ...otherProps } = this.props;
     return (
-      <div ref={(node) => { this.node = node; }} {...otherProps}>
+      <div {...otherProps}>
         <ReactMarkdown
           className={classNames(styles.markdown, 'markdown-body')}
           source={source}
