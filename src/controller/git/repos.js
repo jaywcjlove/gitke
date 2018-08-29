@@ -58,6 +58,9 @@ module.exports = {
       model: Models.users,
       as: 'owner',
       attributes: { exclude: ['password'] }
+    }, {
+      model: Models.namespaces,
+      as: 'namespace',
     }];
     try {
       const users = await Models.users.findOne({ where: { username } });

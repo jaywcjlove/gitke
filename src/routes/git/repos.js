@@ -34,12 +34,12 @@ router
    *    "count": 1,
    *    "rows": [
    *      {
-   *        "updated_at": "2018/08/13 01:10:42",
-   *        "created_at": "2018/08/13 01:10:42",
-   *        "id": 1,
-   *        "name": "test2",
-   *        "path": "test2",
-   *        "description": "",
+   *        "updated_at": "2018/08/28 01:24:13",
+   *        "created_at": "2018/08/28 01:24:13",
+   *        "id": 12,
+   *        "name": "testw",
+   *        "path": "testw",
+   *        "description": "Native Node bindings to Git. https://www.nodegit.org/",
    *        "namespace_id": 1,
    *        "creator_id": 1,
    *        "import_url": null,
@@ -47,11 +47,11 @@ router
    *        "fork": false,
    *        "private": false,
    *        "owner": {
-   *          "updated_at": "2018/08/13 01:10:25",
-   *          "created_at": "2018/08/13 01:10:25",
+   *          "updated_at": "2018/08/22 11:50:12",
+   *          "created_at": "2018/08/22 11:50:12",
    *          "id": 1,
    *          "username": "admin",
-   *          "name": "",
+   *          "name": "admin",
    *          "admin": true,
    *          "bio": "",
    *          "location": "",
@@ -64,6 +64,17 @@ router
    *          "web_url": null,
    *          "skype": "",
    *          "state": "active"
+   *        },
+   *        "namespace": {
+   *          "updated_at": "2018/08/22 11:50:12",
+   *          "created_at": "2018/08/22 11:50:12",
+   *          "id": 1,
+   *          "name": "admin",
+   *          "path": "admin",
+   *          "owner_id": "1",
+   *          "type": null,
+   *          "description": "",
+   *          "avatar": ""
    *        }
    *      }
    *    ]
