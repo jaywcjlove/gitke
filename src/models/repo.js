@@ -5,6 +5,7 @@ export default {
   state: {
     detail: {},
     readmeContent: '',
+    reposTree: {},
     repos: {
       page: 1, pages: 2, count: 0, rows: [],
     },
@@ -17,7 +18,22 @@ export default {
   effects: {
     async getRepoDetail(options) {
       const repos = await request(`/api/repos/${options.owner}/${options.repo}`);
-      this.updateState({ detail: repos });
+      const reposTree = await request(`/api/repos/${repos.id}/tree`);
+      reposTree.tree = reposTree.tree.map(item => ({
+        icon: item.type,
+        content: {
+          name: item.name,
+          id: item.id,
+          type: item.type,
+          path: item.type === 'commit' ? `/${options.owner}/${options.repo}/tree/${item.id}` : `/${options.owner}/${options.repo}/tree/master/${item.name}`,
+        },
+        message: reposTree.summary,
+        age: '',
+      })).sort((item) => {
+        if (item.icon === 'commit' || item.icon === 'tree') return 0;
+        return 1;
+      });
+      this.updateState({ detail: repos, reposTree });
     },
     async getRepoDetailReadme(options) {
       const repos = await request(`/api/repos/${options.owner}/${options.repo}/readme`);

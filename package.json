@@ -29,7 +29,7 @@
     "uiw": "^1.15.10"
   },
   "devDependencies": {
-    "kkt": "1.9.x",
+    "kkt": "^2.0.5",
     "monaco-editor-webpack-plugin": "^1.5.1"
   }
 }
