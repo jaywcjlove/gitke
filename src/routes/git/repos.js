@@ -114,6 +114,59 @@ router
    */
   .post('/user/repos', repos.created)
   /**
+   * @api {get} /repos/:id/tree 项目文件列表
+   * 
+   * @apiDescription 获取仓库中的文件列表
+   *
+   * @apiParam {String} id 项目ID
+   * @apiParam {String} [path] 存储库中的路径
+   * @apiParam {String} [ref] 存储库分支或标记的名称，如果没有给出默认分支
+   * @apiParam {String} [recursive] 用于获取递归树的布尔值（默认为false）
+   * 
+   * @apiName getOrgReadme
+   * @apiGroup Git
+   *
+   * @apiSuccessExample {json} Success-Response:
+   * HTTP/1.1 200 OK
+   *  {
+   *    "sha": "3a290ae75747e573355bea4ae011d676046c6fcc",
+   *    "summary": "Add src/READMe.md",
+   *    "message": "Add src/READMe.md\n",
+   *    "messageRaw": "Add src/READMe.md\n",
+   *    "owner": {
+   *      "name": "jaywcjlove",
+   *      "email": "398188662@qq.com"
+   *    },
+   *    "amend": {},
+   *    "time": 1535567392,
+   *    "date": "2018-08-29T18:29:52.000Z",
+   *    "timeMs": 1535567392000,
+   *    "timeOffset": 480,
+   *    "path": "",
+   *    "entryCount": 4,
+   *    "tree": [
+   *      {
+   *        "id": "5ee591df6a4a981a1c2ae5b532bb86edc80773c8",
+   *        "name": "examle.xml",
+   *        "path": "examle.xml",
+   *        "filemodeRaw": 33188,
+   *        "mode": 33188,
+   *        "type": "blob"
+   *      },
+   *      {
+   *        "id": "9daeafb9864cf43055ae93beb0afd6c7d144bfa4",
+   *        "name": "README.md",
+   *        "path": "src/README.md",
+   *        "filemodeRaw": 33188,
+   *        "mode": 33188,
+   *        "type": "blob"
+   *      },
+   *    ]
+   *  }
+   * 
+   */
+  .get('/repos/:id/tree', repos.reposTree)
+  /**
    * @api {get} /repos/:owner/:repo 项目详情
    * 
    * @apiName getRepo

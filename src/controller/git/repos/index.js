@@ -1,7 +1,41 @@
 const Git = require("nodegit");
 const PATH = require("path");
 const FS = require('fs-extra')
-const Models = require('../../../conf/sequelize');
+const Models = require('../../../../conf/sequelize');
+const { readFile } = require('../../../utils/fsExtra');
+
+/**
+ * 获取目录
+ * @param {Object} treeWalker 
+ * @param {Boolean} [recursive=false] 以广度优先顺序递归地遍历树。
+ */
+const getFiles = (treeWalker, recursive = false) => {
+  const trees = [];
+  return new Promise((resolve, reject) => {
+    treeWalker.on("entry", (entry) => {
+      let type = '';
+      if (entry.isBlob()) type = 'blob';
+      if (entry.isDirectory()) type = 'tree';
+      if (entry.isSubmodule()) type = 'commit';
+      trees.push({
+        id: entry.sha(),
+        name: entry.name(),
+        path: entry.path(),
+        filemodeRaw: entry.filemodeRaw(),
+        mode: entry.filemode(),
+        type,
+      });
+    });
+    treeWalker.on("end", (entries) => {
+      if (recursive) resolve(trees);
+    });
+    treeWalker.on("error", (error) => {
+      reject(error)
+    });
+    treeWalker.start();
+    if (!recursive) resolve(trees);
+  });
+}
 
 module.exports = {
   created: async (ctx) => {
@@ -100,11 +134,21 @@ module.exports = {
   readme: async (ctx) => {
     const { owner, repo } = ctx.params;
     const { reposPath } = ctx.state.conf;
+    const { userInfo } = ctx.session;
     const currentRepoPath = PATH.join(reposPath, owner, `${repo}.git`);
     try {
       const gitRepo = await Git.Repository.open(currentRepoPath);
+      let emptyRepoReadme = await readFile(PATH.join(__dirname, 'EmptyRepo.md'));
       if (gitRepo.isEmpty() === 1) {
-        ctx.body = { content: '' };
+        if (userInfo.username !== owner) emptyRepoReadme = '';
+        if (userInfo.username === owner) {
+          emptyRepoReadme = emptyRepoReadme
+            .replace(/\{\{username\}\}/g, owner)
+            .replace(/\{\{repos\}\}/g, repo)
+            .replace(/\{\{host\}\}/g, ctx.hostname)
+            .replace(/\{\{email\}\}/g, userInfo.email)
+        }
+        ctx.body = { content: emptyRepoReadme };
         return;
       }
       let refCommit = await gitRepo.getReferenceCommit('refs/heads/master');
@@ -112,6 +156,62 @@ module.exports = {
       refCommit = await refCommit.getEntry("README.md");
       refCommit = await refCommit.getBlob();
       ctx.body = { content: refCommit.toString() };
+    } catch (err) {
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
+  },
+  reposTree: async (ctx) => {
+    const { id } = ctx.params;
+    let { recursive = false } = ctx.request.query
+    try {
+      const projects = await Models.projects.findOne({
+        where: { id },
+        include: [{
+          model: Models.users,
+          as: 'owner',
+          attributes: { exclude: ['password'] }
+        }, {
+          model: Models.namespaces,
+          as: 'namespace',
+        }],
+      });
+      if (!projects) ctx.throw(404, `Owner ${id} does not exist`);
+
+      const { reposPath } = ctx.state.conf;
+      const currentRepoPath = PATH.join(reposPath, projects.namespace.name, `${projects.name}.git`);
+      const gitRepo = await Git.Repository.open(currentRepoPath);
+      if (gitRepo.isEmpty() === 1) {
+        ctx.body = { tree: [] };
+        return;
+      }
+      let commit = await gitRepo.getMasterCommit();
+      const body = {}
+      body.sha = commit.sha();
+      // body.toString = commit.toString();
+      body.summary = commit.summary();
+      body.message = commit.message();
+      body.messageRaw = commit.messageRaw();
+      body.messageEncoding = commit.messageEncoding();
+      body.owner = {
+        free: commit.author().free(),
+        name: commit.author().name(),
+        email: commit.author().email(),
+      };
+      body.amend = commit.amend();
+      body.body = commit.body();
+      body.time = commit.time();
+      body.date = commit.date();
+      body.timeMs = commit.timeMs();
+      body.timeOffset = commit.timeOffset();
+
+      const treeId = Git.Oid.fromString(body.sha);
+      commit = await commit.getTree(treeId);
+      body.path = commit.path();
+      body.entryCount = commit.entryCount();
+      commit = await commit.walk(recursive);
+      body.tree = await getFiles(commit, recursive);
+      ctx.body = body;
     } catch (err) {
       ctx.response.status = err.statusCode || err.status || 500;
       ctx.body = { message: err.message, ...err }

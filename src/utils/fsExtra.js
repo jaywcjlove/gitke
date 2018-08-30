@@ -15,3 +15,12 @@ exports.existsRepo = (repoNamePath) => {
     });
   });
 }
+
+
+exports.readFile = async (path, charset = 'utf8') => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, charset, (err, data) => {
+      err ? reject(err) : resolve(data);
+    });
+  });
+};
