@@ -163,7 +163,8 @@ module.exports = {
   },
   reposTree: async (ctx) => {
     const { id } = ctx.params;
-    let { recursive = false } = ctx.request.query
+    let { recursive = false, branch } = ctx.request.query
+    console.log('ctx.params:', ctx.request.query)
     try {
       const projects = await Models.projects.findOne({
         where: { id },
@@ -185,7 +186,14 @@ module.exports = {
         ctx.body = { tree: [] };
         return;
       }
-      let commit = await gitRepo.getMasterCommit();
+      let commit;
+      if (branch) {
+        commit = await gitRepo.getReferenceCommit(branch);
+      } else {
+        commit = await gitRepo.getMasterCommit();
+      }
+
+      console.log('~~~:', commit);
       const body = {}
       body.sha = commit.sha();
       // body.toString = commit.toString();
@@ -205,8 +213,28 @@ module.exports = {
       body.timeMs = commit.timeMs();
       body.timeOffset = commit.timeOffset();
 
+      // const treeId = Git.Oid.fromString('5d08433fcb6ecbfe3d1709013452f3d41ffa1ced');
       const treeId = Git.Oid.fromString(body.sha);
       commit = await commit.getTree(treeId);
+      
+      let test = await commit.getEntry("conf");
+      test = await test.getTree('5d08433fcb6ecbfe3d1709013452f3d41ffa1ced');
+      // test = test.getTree('5d08433fcb6ecbfe3d1709013452f3d41ffa1ced')
+      // commit = await (commit ? commit.getTree() : Git.Tree.lookup(gitRepo, emptyTree));
+      // const imagesTree = commit.entryByPath('conf')
+      // console.log('~~~>>>>', imagesTree.__proto__)
+      // console.log('~~~>>commit>>', test.__proto__)
+
+      // test = await test.toObject(gitRepo);
+      console.log('~~~>>test>>', test.__proto__)
+      console.log('~~~>>test>>', test.path())
+      console.log('~~~>>commit>>', commit.__proto__)
+      // console.log('~~~>>commit>>', test.path())
+
+      commit = test;
+
+
+      // console.log('~~~>>>>', commit.path())
       body.path = commit.path();
       body.entryCount = commit.entryCount();
       commit = await commit.walk(recursive);

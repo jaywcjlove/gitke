@@ -4,7 +4,6 @@
   "description": "",
   "scripts": {
     "start": "node src/index.js",
-    "api": "apidoc -i src/ -o doc/",
     "dev": "DEBUG=git:* nodemon src/index.js"
   },
   "keywords": [
@@ -18,15 +17,6 @@
       "doc/*",
       ".gitke-data/*"
     ]
-  },
-  "apidoc": {
-    "name": "Gitke",
-    "version": "1.0.0",
-    "description": "Simple git server",
-    "apidoc": {
-      "title": "Simple git server",
-      "url": "https://api.github.com/v1"
-    }
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
@@ -50,7 +40,6 @@
     "through2": "^2.0.3"
   },
   "devDependencies": {
-    "apidoc": "^0.17.6",
     "nodemon": "^1.18.3"
   }
 }

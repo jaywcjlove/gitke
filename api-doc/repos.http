@@ -1,0 +1,46 @@
+
+@baseUrl = http://localhost:19870
+@contentType = application/json
+
+
+### 自己的组织列表
+
+# * @apiParam {String} [type='Group'] Group 为组，null为个人组，都被认为是命名空间
+# * @apiParam {String} [username] 用户名，不传递默认为自己
+
+GET {{baseUrl}}/api/user/orgs
+Content-Type: {{contentType}}
+
+### 获取 README
+
+GET {{baseUrl}}/api/repos/admin/test/readme
+Content-Type: {{contentType}}
+
+### 用户项目列表
+
+@username = admin
+
+# @apiSuccess {Number} count 总条数.
+# @apiSuccess {Number} [limit=10] 每页显示多少条.
+# @apiSuccess {Number} [page=1] 弟几页.
+# @apiSuccess {Number} [pages] 总页数.
+
+GET {{baseUrl}}/api/users/{{username}}/repos?page=1&limit=2
+Content-Type: {{contentType}}
+
+### 获取项目详情
+
+@repo = test
+
+# @apiSuccess {String} username 用户名
+# @apiSuccess {String} repo 仓名称
+
+GET {{baseUrl}}/api/repos/{{username}}/{{repo}}
+Content-Type: {{contentType}}
+
+### 项目文件列表
+
+@id = 13
+
+GET {{baseUrl}}/api/repos/{{id}}/tree
+Content-Type: {{contentType}}

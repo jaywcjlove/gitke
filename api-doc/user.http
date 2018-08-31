@@ -1,0 +1,50 @@
+
+@baseUrl = http://localhost:19870
+@contentType = application/json
+
+### User Login
+
+@username = admin
+
+POST {{baseUrl}}/api/user/login
+Content-Type: {{contentType}}
+
+{
+  "username": "{{username}}",
+  "password": "admin"
+}
+
+# @apiSuccess {Number} id 用户ID.
+# @apiSuccess {String} username 用户名
+# @apiSuccess {String} email 邮箱
+# @apiSuccess {String} public_email 公开邮箱
+# @apiSuccess {String} created_at 创建时间
+# @apiSuccess {String} updated_at 更新时间
+
+### 验证是否登录
+
+GET {{baseUrl}}/api/user/verify
+Content-Type: {{contentType}}
+
+### 用户退出
+
+DELETE {{baseUrl}}/api/user/logout
+Content-Type: {{contentType}}
+
+### 添加用户
+
+POST {{baseUrl}}/api/user
+Content-Type: {{contentType}}
+
+{
+	"username": "wcjiang3",
+	"email": "wcjiangdd3d@gmai.com",
+	"public_email": "ss@qq.com",
+	"password": "admin",
+	"web_url": "http://foo.com"
+}
+
+### 用户列表
+
+GET {{baseUrl}}/api/users
+Content-Type: {{contentType}}
