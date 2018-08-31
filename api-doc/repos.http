@@ -41,6 +41,11 @@ Content-Type: {{contentType}}
 ### 项目文件列表
 
 @id = 13
+	
+# @apiParam {String} id 项目ID	
+# @apiParam {String} [path] 存储库中的路径	
+# @apiParam {String} [ref] 存储库分支或标记的名称，如果没有给出默认分支	
+# @apiParam {String} [recursive] 用于获取递归树的布尔值（默认为false）
 
 GET {{baseUrl}}/api/repos/{{id}}/tree
 Content-Type: {{contentType}}
