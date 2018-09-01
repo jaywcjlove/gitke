@@ -49,3 +49,18 @@ Content-Type: {{contentType}}
 
 GET {{baseUrl}}/api/repos/{{id}}/tree
 Content-Type: {{contentType}}
+
+# @apiSuccess {String} readmeContent 返回 README.md 内容
+# @apiSuccess sha 7eb9d6bbf8ef2f3236f0e71dd8e020715507ea01
+# @apiSuccess summary 提交commit内容 "Add repo tree API parameter path."
+# @apiSuccess message 提交commit内容 "Add repo tree API parameter path.\n"
+# @apiSuccess messageRaw 提交commit内容 "Add repo tree API parameter path.\n"
+# @apiSuccess owner 返回 { "name": "jaywcjlove", "email": "398188662@qq.com" }
+# @apiSuccess amend 
+# @apiSuccess time 535736727
+# @apiSuccess date 2018-08-31T17:32:07.000Z"
+# @apiSuccess timeMs 535736727000
+# @apiSuccess timeOffset 80
+# @apiSuccess isFile alse
+# @apiSuccess path 返回路径
+# @apiSuccess entryCount 

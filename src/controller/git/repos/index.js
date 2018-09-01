@@ -4,38 +4,7 @@ const FS = require('fs-extra')
 const Models = require('../../../../conf/sequelize');
 const { readFile } = require('../../../utils/fsExtra');
 
-/**
- * 获取目录
- * @param {Object} treeWalker 
- * @param {Boolean} [recursive=false] 以广度优先顺序递归地遍历树。
- */
-const getFiles = (treeWalker, recursive = false) => {
-  const trees = [];
-  return new Promise((resolve, reject) => {
-    treeWalker.on("entry", (entry) => {
-      let type = '';
-      if (entry.isBlob()) type = 'blob';
-      if (entry.isDirectory()) type = 'tree';
-      if (entry.isSubmodule()) type = 'commit';
-      trees.push({
-        id: entry.sha(),
-        name: entry.name(),
-        path: entry.path(),
-        filemodeRaw: entry.filemodeRaw(),
-        mode: entry.filemode(),
-        type,
-      });
-    });
-    treeWalker.on("end", (entries) => {
-      if (recursive) resolve(trees);
-    });
-    treeWalker.on("error", (error) => {
-      reject(error)
-    });
-    treeWalker.start();
-    if (!recursive) resolve(trees);
-  });
-}
+const { getFiles } = require('./util');
 
 module.exports = {
   created: async (ctx) => {
@@ -134,23 +103,9 @@ module.exports = {
   readme: async (ctx) => {
     const { owner, repo } = ctx.params;
     const { reposPath } = ctx.state.conf;
-    const { userInfo } = ctx.session;
     const currentRepoPath = PATH.join(reposPath, owner, `${repo}.git`);
     try {
       const gitRepo = await Git.Repository.open(currentRepoPath);
-      let emptyRepoReadme = await readFile(PATH.join(__dirname, 'EmptyRepo.md'));
-      if (gitRepo.isEmpty() === 1) {
-        if (userInfo.username !== owner) emptyRepoReadme = '';
-        if (userInfo.username === owner) {
-          emptyRepoReadme = emptyRepoReadme
-            .replace(/\{\{username\}\}/g, owner)
-            .replace(/\{\{repos\}\}/g, repo)
-            .replace(/\{\{host\}\}/g, ctx.hostname)
-            .replace(/\{\{email\}\}/g, userInfo.email)
-        }
-        ctx.body = { content: emptyRepoReadme };
-        return;
-      }
       let refCommit = await gitRepo.getReferenceCommit('refs/heads/master');
       refCommit = await gitRepo.getCommit(refCommit.sha());
       refCommit = await refCommit.getEntry("README.md");
@@ -163,7 +118,8 @@ module.exports = {
   },
   reposTree: async (ctx) => {
     const { id } = ctx.params;
-    let { recursive = false, branch } = ctx.query;
+    const { userInfo } = ctx.session;
+    let { recursive = false, branch = 'master' } = ctx.query;
     try {
       const projects = await Models.projects.findOne({
         where: { id },
@@ -178,20 +134,30 @@ module.exports = {
       });
       if (!projects) ctx.throw(404, `Owner ${id} does not exist`);
 
+      const repoDetail = await Models.projects.findOne({
+        where: { id },
+        include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
+      });
+
       const { reposPath } = ctx.state.conf;
       const currentRepoPath = PATH.join(reposPath, projects.namespace.name, `${projects.name}.git`);
       const gitRepo = await Git.Repository.open(currentRepoPath);
+      
+      // 空仓库返回 README.md 说明内容
+      let emptyRepoReadme = await readFile(PATH.join(__dirname, 'EmptyRepo.md'));
       if (gitRepo.isEmpty() === 1) {
-        ctx.body = { tree: [] };
+        if (userInfo.username !== repoDetail.owner.username) emptyRepoReadme = '';
+        if (userInfo.username === repoDetail.owner.username) {
+          emptyRepoReadme = emptyRepoReadme
+            .replace(/\{\{username\}\}/g, repoDetail.owner.username)
+            .replace(/\{\{repos\}\}/g, repoDetail.name)
+            .replace(/\{\{host\}\}/g, ctx.hostname)
+            .replace(/\{\{email\}\}/g, userInfo.email)
+        }
+        ctx.body = { tree: [], readmeContent: emptyRepoReadme };
         return;
       }
-      let commit;
-      if (branch) {
-        commit = await gitRepo.getReferenceCommit(branch);
-      } else {
-        commit = await gitRepo.getMasterCommit();
-      }
-
+      let commit = await gitRepo.getReferenceCommit(branch);
       const body = {}
       body.sha = commit.sha();
       // body.toString = commit.toString();
@@ -210,6 +176,7 @@ module.exports = {
       body.date = commit.date();
       body.timeMs = commit.timeMs();
       body.timeOffset = commit.timeOffset();
+      body.isFile = false;
 
       // const treeId = Git.Oid.fromString('5d08433fcb6ecbfe3d1709013452f3d41ffa1ced');
       const treeId = Git.Oid.fromString(body.sha);
@@ -217,15 +184,35 @@ module.exports = {
 
       // 参数 path 处理，存储库中的路径
       if (ctx.query.path) {
-        let dirTree = await commit.getEntry(ctx.query.path);
-        dirTree = await dirTree.getTree(dirTree.sha());
-        commit = dirTree;
+        let treeObj = await commit.getEntry(ctx.query.path);
+        if (treeObj.isFile()) {
+          body.isFile = treeObj.isFile();
+          treeObj = await treeObj.getBlob();
+          body.path = ctx.query.path;
+          body.tree = [];
+          body.readmeContent = treeObj.toString();
+          ctx.body = body;
+          return;
+        }
+        treeObj = await treeObj.getTree(treeObj.sha());
+        commit = treeObj;
       }
 
       body.path = commit.path();
       body.entryCount = commit.entryCount();
+      body.readmeContent = ''; // 默认目录下的 README.md 文件内容为空
       commit = await commit.walk(recursive);
-      body.tree = await getFiles(commit, recursive);
+      const treeArray = await getFiles(commit, recursive);
+      // 过滤 entry 对象
+      const oldTree = [...treeArray].map(({ entry, ...otherProps }) => otherProps);
+      // 读取默认目录中的 README.md 文件内容
+      let readme = treeArray.filter(item => item.type === 'blob' && /readme.md$/.test(item.path.toLocaleLowerCase()));
+      if (readme && readme.length > 0) {
+        readme = readme[0];
+        const blob = await readme.entry.getBlob();
+        body.readmeContent = await blob.toString();
+      }
+      body.tree = [...oldTree];
       ctx.body = body;
     } catch (err) {
       ctx.response.status = err.statusCode || err.status || 500;
