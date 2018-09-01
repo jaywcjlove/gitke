@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "deploy": "gh-pages -d dist",
+    "deploy": "kkt deploy -d dist -u git@github.com:jaywcjlove/gitke.git",
     "start": "kkt start",
     "build": "kkt build"
   },
