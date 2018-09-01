@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[41],{"./src/models/create.js":function(e,t,s){"use strict";s.r(t),t.default={state:{},reducers:{updateState:function(e,t){return Object.assign({},e,t)}},effects:{}}}}]);
