@@ -125,8 +125,11 @@ export const getRouterData = () => {
     '/:owner/:repo/tree/:branch': {
       component: dynamicWrapper(['account'], () => import('../routes/repo/tree/branch')),
     },
-    '/:owner/:repo/tree/:branch/:path': {
-      component: dynamicWrapper(['account'], () => import('../routes/repo/tree/path')),
+    '/:owner/:repo/tree/:branch/**': {
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo')),
+    },
+    '/:owner/:repo/blob/:branch/**': {
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo')),
     },
   };
   return conf;

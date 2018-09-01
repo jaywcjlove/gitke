@@ -37,11 +37,14 @@ class Repo extends PureComponent {
       ],
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     const { match } = this.props;
     if (match.params.owner && match.params.repo) {
-      this.props.getRepoDetail({ ...match.params });
-      this.props.getRepoDetailReadme({ ...match.params });
+      if (match.params[0]) {
+        // => /:owner/:repo/blob/:branch/**
+        match.params.path = match.params[0];
+      }
+      await this.props.getRepoDetail({ ...match.params });
     }
   }
   readmeContent(content) {
@@ -66,10 +69,6 @@ class Repo extends PureComponent {
   render() {
     const { detail, match, reposTree } = this.props;
     const { owner, repo } = match.params;
-    let { readmeContent } = this.props;
-    readmeContent = readmeContent.replace(/\\\n/g, '<br>');
-    console.log('reposTree:', reposTree);
-    // https://github.com/jaywcjlove/gitke/commit/2b4c6ba291a4544b9d6ed3203de7407c0d726d0b
     return (
       <PageHeader
         title={(
@@ -95,7 +94,7 @@ class Repo extends PureComponent {
             columns={this.state.columns}
           />
         )}
-        {readmeContent && this.readmeContent(readmeContent)}
+        {reposTree && reposTree.readmeContent && this.readmeContent(reposTree.readmeContent)}
       </PageHeader>
     );
   }

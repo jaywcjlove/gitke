@@ -18,22 +18,42 @@ export default {
   effects: {
     async getRepoDetail(options) {
       const repos = await request(`/api/repos/${options.owner}/${options.repo}`);
-      const reposTree = await request(`/api/repos/${repos.id}/tree`);
-      reposTree.tree = reposTree.tree.map(item => ({
-        icon: item.type,
-        content: {
-          name: item.name,
-          id: item.id,
-          type: item.type,
-          path: item.type === 'commit' ? `/${options.owner}/${options.repo}/tree/${item.id}` : `/${options.owner}/${options.repo}/tree/master/${item.name}`,
-        },
-        message: reposTree.summary,
-        age: '',
-      })).sort((item) => {
+      const reposTree = await request(`/api/repos/${repos.id}/tree`, {
+        body: options,
+      });
+      reposTree.tree = reposTree.tree.map((item) => {
+        let path = '';
+        if (options.path) {
+          path = `master/${options.path}/${item.name}`;
+        } else {
+          path = `master/${item.name}`;
+        }
+        if (item.type === 'commit') {
+          path = options.path ? `${item.id}/${options.path}/${item.name}` : `${item.id}/${item.name}`;
+        }
+        if (item.type === 'blob' || item.type === 'tree') {
+          path = `${item.type}/${path}`;
+        }
+        return {
+          icon: item.type,
+          content: {
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            path: `/${options.owner}/${options.repo}/${path}`,
+          },
+          message: reposTree.summary,
+          age: '',
+        };
+      }).sort((item) => {
         if (item.icon === 'commit' || item.icon === 'tree') return 0;
         return 1;
       });
-      this.updateState({ detail: repos, reposTree });
+      const props = { detail: repos, reposTree };
+      if (reposTree.content) {
+        props.readmeContent = reposTree.content;
+      }
+      this.updateState(props);
     },
     async getRepoDetailReadme(options) {
       const repos = await request(`/api/repos/${options.owner}/${options.repo}/readme`);
