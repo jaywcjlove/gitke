@@ -34,3 +34,26 @@ exports.getFiles = (treeWalker, recursive = false) => {
     if (!recursive) resolve(trees);
   });
 }
+
+// function mySorter(a, b) {
+//   if (/^\d/.test(a) ^ /^\D/.test(b)) return a > b ? 1 : (a == b ? 0 : -1);
+//   return a > b ? -1 : (a == b ? 0 : 1);
+// }
+// const pyArray = ["a", "d", "fa", "5", "t", "fw2", "a31", "b", "e", "2fs", "4", "0"]
+
+/**
+ * Nodegit 返回的目录对象，进行排序
+ * 1. 隐藏文件夹，排在第一位
+ * 2. 文件夹，排在第二位
+ * 3. 隐藏文件，排第三位
+ * 4. 文件，排第四位
+ * @param {Array} tree 
+ */
+exports.repoFilesSort = (tree = []) => {
+  const hiddenFolder = tree.filter(_item => /^\./.test(_item.name) && /^(tree|commit)$/.test(_item.type));
+  const folder = tree.filter(_item => !/^\./.test(_item.name) && /^(tree|commit)$/.test(_item.type));
+  const hiddenFile = tree.filter(_item => /^\./.test(_item.name) && /^(blob)$/.test(_item.type));
+  const file = tree.filter(_item => !/^\./.test(_item.name) && /^(blob)$/.test(_item.type));
+  console.log('tree:', file);
+  return [].concat(hiddenFolder, folder, hiddenFile, file);
+}

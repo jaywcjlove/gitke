@@ -4,7 +4,7 @@ const FS = require('fs-extra')
 const Models = require('../../../../conf/sequelize');
 const { readFile } = require('../../../utils/fsExtra');
 
-const { getFiles } = require('./util');
+const { getFiles, repoFilesSort } = require('./util');
 
 module.exports = {
   created: async (ctx) => {
@@ -212,7 +212,7 @@ module.exports = {
         const blob = await readme.entry.getBlob();
         body.readmeContent = await blob.toString();
       }
-      body.tree = [...oldTree];
+      body.tree = repoFilesSort([...oldTree]);
       ctx.body = body;
     } catch (err) {
       ctx.response.status = err.statusCode || err.status || 500;
