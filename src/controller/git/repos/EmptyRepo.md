@@ -1,3 +1,22 @@
+### Get started quickly
+
+Creating a `README` or a `.gitignore` is a quick and easy way to get something into your repository.
+
+### Get your local Git repository on Gitke
+Step 1: Switch to your repository's directory
+
+```bash
+cd /path/to/your/repo
+```
+
+Step 2: Connect your existing repository to Gitke
+
+```bash
+git remote add origin git@{{host}}:{{username}}/{{repos}}.git
+# or
+git remote add origin https://{{username}}@{{host}}/{{username}}/{{repos}}.git
+git push -u origin master
+```
 
 ### Command line instructions
 

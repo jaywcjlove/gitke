@@ -4,7 +4,7 @@ const FS = require('fs-extra')
 const Models = require('../../../../conf/sequelize');
 const { readFile } = require('../../../utils/fsExtra');
 
-const { getFiles, repoFilesSort } = require('./util');
+const { getFiles, repoFilesSort, getEntrysInfo, getEntrysCommit } = require('./util');
 
 module.exports = {
   created: async (ctx) => {
@@ -203,8 +203,7 @@ module.exports = {
       body.readmeContent = ''; // 默认目录下的 README.md 文件内容为空
       commit = await commit.walk(recursive);
       const treeArray = await getFiles(commit, recursive);
-      // 过滤 entry 对象
-      const oldTree = [...treeArray].map(({ entry, ...otherProps }) => otherProps);
+      const oldTree = [...treeArray];
       // 读取默认目录中的 README.md 文件内容
       let readme = treeArray.filter(item => item.type === 'blob' && /readme.md$/.test(item.path.toLocaleLowerCase()));
       if (readme && readme.length > 0) {
@@ -212,7 +211,12 @@ module.exports = {
         const blob = await readme.entry.getBlob();
         body.readmeContent = await blob.toString();
       }
-      body.tree = repoFilesSort([...oldTree]);
+      let treeCommit = repoFilesSort([...oldTree]);
+      // 获取
+      treeCommit = await getEntrysInfo(treeCommit, gitRepo, currentRepoPath);
+      // 获取每个文件的 Commit 信息，性能低下暂不做处理
+      // treeCommit = await getEntrysCommit(treeCommit, gitRepo, body.sha);
+      body.tree = treeCommit;
       ctx.body = body;
     } catch (err) {
       ctx.response.status = err.statusCode || err.status || 500;
