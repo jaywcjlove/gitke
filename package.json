@@ -26,7 +26,7 @@
     "react-markdown": "^3.4.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "uiw": "^1.15.10"
+    "uiw": "^1.16.1"
   },
   "devDependencies": {
     "kkt": "^2.0.5",

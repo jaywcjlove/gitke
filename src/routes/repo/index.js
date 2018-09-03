@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Card, Table } from 'uiw';
+import { Card, Table, Breadcrumb } from 'uiw';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
 import Icon from '../../components/Icon/Repos';
 import Markdown from '../../components/Markdown';
+import { urlToList } from '../../utils/utils';
 import styles from './index.less';
 
 class Repo extends PureComponent {
@@ -32,7 +33,17 @@ class Repo extends PureComponent {
             );
           },
         },
-        { key: 'message' },
+        {
+          key: 'size',
+        },
+        {
+          key: 'message',
+          render: (item) => {
+            return (
+              <Link to={item.path} title={item.message}>{item.message}</Link>
+            );
+          },
+        },
         { key: 'age', width: 180 },
       ],
     };
@@ -53,7 +64,7 @@ class Repo extends PureComponent {
       noHover: true,
       className: styles.cardReadme,
       title: (
-        <span className={styles.title } >
+        <span className={styles.title} >
           <Icon type="octiconbook" />
           <span>README.md</span>
         </span >
@@ -80,6 +91,20 @@ class Repo extends PureComponent {
         )}
         content={detail.description || 'No description, website, or topics provided.'}
       >
+        {reposTree.path && (
+          <Breadcrumb>
+            {urlToList(reposTree.path).map((item, key) => {
+              const props = { key };
+              if (urlToList(reposTree.path).length - 1 !== key) {
+                // console.log('::::', urlToList(reposTree.path).length, key, item);
+                props.href = item.path;
+              }
+              return (
+                <Breadcrumb.Item {...props}>{item.name}</Breadcrumb.Item>
+              );
+            })}
+          </Breadcrumb>
+        )}
         {reposTree && reposTree.tree && reposTree.tree.length > 0 && (
           <Table
             className={styles.table}

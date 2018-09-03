@@ -124,7 +124,7 @@ class BasicLayout extends PureComponent {
       <Container menuData={getMenuData()} {...this.props} {...this.resetProps}>
         <Switch>
           {RouteComponents}
-          <Route render={() => <Redirect to="/dashboard/overview" />} />
+          <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Container>
     );

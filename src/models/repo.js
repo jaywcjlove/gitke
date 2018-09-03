@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import { bytesToSize } from '../utils/utils';
 import history from '../history';
 
 export default {
@@ -29,7 +30,7 @@ export default {
           path = `master/${item.name}`;
         }
         if (item.type === 'commit') {
-          path = options.path ? `${item.id}/${options.path}/${item.name}` : `${item.id}/${item.name}`;
+          path = `tree/${item.id}`;
         }
         if (item.type === 'blob' || item.type === 'tree') {
           path = `${item.type}/${path}`;
@@ -42,12 +43,13 @@ export default {
             type: item.type,
             path: `/${options.owner}/${options.repo}/${path}`,
           },
-          message: reposTree.summary,
+          size: item.size && bytesToSize(item.size),
+          message: {
+            path: `/${options.owner}/${options.repo}/commit/${item.sha}`,
+            message: item.message,
+          },
           age: '',
         };
-      }).sort((item) => {
-        if (item.icon === 'commit' || item.icon === 'tree') return 0;
-        return 1;
       });
       const props = { detail: repos, reposTree };
       if (reposTree.content) {

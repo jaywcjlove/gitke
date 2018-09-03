@@ -19,7 +19,7 @@ class ListPage extends Component {
           {data.map((item, idx) => {
             return (
               <List.Item className={styles.listItem} key={idx}>
-                <Link to={`/${item.owner.username}/${item.name}`}>{item.owner.username} / {item.name}</Link>
+                <Link to={`/${item.owner.username}/${item.name}`}>{item.name}</Link>
                 {item.description && (<p>{item.description}</p>)}
                 <div>
                   <DateAgo value={item.updated_at} />
