@@ -20,6 +20,7 @@ module.exports = (app) => {
     includes: [/^\/api/],
   }));
   app.use(require('./user').routes());
+  app.use(require('./git/raw').routes());
   app.use(require('./git/repos').routes());
   app.use(require('./git/namespaces').routes());
 }
