@@ -83,6 +83,8 @@ exports.getEntrysInfo = (tree = [], repo) => {
     const oid = await nodegit.Oid.fromString(item.id);
     // submodule
     if (item.type === 'commit') {
+      let odb = await repo.odb();
+      // odb = await odb.read(oid);
       // console.log('item:', item.entry.sha())
       // 过滤 entry 对象
       delete item.entry;
@@ -100,6 +102,7 @@ exports.getEntrysInfo = (tree = [], repo) => {
 
 /**
  * 获取每个问文件的 hash 和 message
+ * https://github.com/nodegit/nodegit/issues/1174
  * @param {Array} tree 每个文件的JSON对象
  * @param {Object} repo Nodegit 仓对象
  * @param {String} firstCommitOnMasterSha 仓库的第一个commit hash
@@ -108,32 +111,79 @@ exports.getEntrysCommit = (tree = [], repo, firstCommitOnMasterSha) => {
   if (!tree || tree.length === 0) return [];
   return Promise.all(tree.map(async (item) => {
     const props = { ...item };
-    if (item.path && (item.type === 'commit' || item.type === 'blob')) {
-      // https://github.com/nodegit/nodegit/issues/220
-      // 获取单个文件的提交
-      const walker = await repo.createRevWalk();
-      walker.push(firstCommitOnMasterSha);
-      walker.sorting(nodegit.Revwalk.SORT.Time);
-      const history = await walker.fileHistoryWalk(item.path, 1);
-      history.forEach((entry, index) => {
-        const commit = entry.commit;
-        if (index === 0) {
-          props.author = {};
-          props.author.name = commit.author().name();
-          props.author.email = commit.author().email();
-          props.message = commit.message();
-          props.sha = commit.sha();
-          props.time = commit.time();
-        }
-      });
-    }
-    if (item.path === 'conf' && item.type === 'tree') {
+    // if (item.path) {
+    //   let root = null;
+    //   const walk = repo.createRevWalk();
+    //   try {
+    //     walk.pushGlob('refs/heads/*');
+    //     // walk.pushRef('refs/heads/master')
+    //     // walk.pushHead()
+    //     walk.sorting(nodegit.Revwalk.SORT.TIME, nodegit.Revwalk.SORT.REVERSE);
+    //     await (async function step() {
+    //       let oid = null;
+    //       try {
+    //         oid = await walk.next();
+    //       } catch (error) {
+    //         return;
+    //       }
+    //       if (oid == null) {
+    //         return;
+    //       }
+    //       const commit = await nodegit.Commit.lookup(repo, oid)
+    //       let entry = null;
+    //       try {
+    //         entry = await commit.getEntry(item.path);
+    //       }
+    //       catch (err) {
+    //         if (err.errno !== -3) {
+    //           throw err;
+    //         }
+    //       }
+    //       if (entry != null) {
+    //         root = commit;
+    //         if (entry.oid() === item.id) {
+    //           return;
+    //         }
+    //       }
+    //       await step();
+    //     })()
+    //   }
+    //   finally {
+    //     walk.free();
+    //   }
+    //   const string = root.message();
+    //   const sha = root.sha();
+    //   props.message = string;
+    //   props.sha = sha;
+    // }
 
-      const treeEntrys = await repo.getTree(item.id);
-      const treeEntry = treeEntrys.entryByIndex(0);
-      const refreshIndex = await repo.refreshIndex();
-      const indexEntryFolder = refreshIndex.getByPath(treeEntry.path());
-    }
+    // if (item.path && (item.type === 'commit' || item.type === 'blob')) {
+    //   // https://github.com/nodegit/nodegit/issues/220
+    //   // 获取单个文件的提交
+    //   const walker = await repo.createRevWalk();
+    //   walker.push(firstCommitOnMasterSha);
+    //   walker.sorting(nodegit.Revwalk.SORT.Time);
+    //   const history = await walker.fileHistoryWalk(item.path, 500);
+    //   history.forEach((entry, index) => {
+    //     const commit = entry.commit;
+    //     if (index === 0) {
+    //       props.author = {};
+    //       props.author.name = commit.author().name();
+    //       props.author.email = commit.author().email();
+    //       props.message = commit.message();
+    //       props.sha = commit.sha();
+    //       props.time = commit.time();
+    //     }
+    //   });
+    // }
+
+    // if (item.path === 'conf' && item.type === 'tree') {
+    //   const treeEntrys = await repo.getTree(item.id);
+    //   const treeEntry = treeEntrys.entryByIndex(0);
+    //   const refreshIndex = await repo.refreshIndex();
+    //   const indexEntryFolder = refreshIndex.getByPath(treeEntry.path());
+    // }
+
     // const blob = await nodegit.Blob.lookup(repo, item.id);
     // // const rawsize = await blob.rawsize()
     // // const content = await blob.content()
