@@ -24,10 +24,7 @@ The requested file is specified by:
 ## Gitke URLs:
 
 * `https://localhost:2018/{owner}/{repo}/raw/{ref}/path/to/file`
-
-Remote examples:
-
-* http://localhost:2018/admin/gitke/raw/master/README.md
+* `http://localhost:2018/admin/gitke/raw/master/README.md`
 
 ## Git HTTP Transfer Protocols
 
