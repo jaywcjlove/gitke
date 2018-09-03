@@ -10,6 +10,7 @@ npm-debug.log*
 .vscode
 
 *.bak
+*.log
 *.tem
 *.temp
 #.swp
