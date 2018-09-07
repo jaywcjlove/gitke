@@ -1,26 +1,24 @@
-const path = require('path');
+const PATH = require('path');
+const toml = require('toml');
 const FS = require('fs-extra');
 const home = require('os-homedir');
 
-const cachPath = path.join(home(), '.gitke-data');
-// const cachPath = path.join(__dirname, '..', '.gitke-data');
+const rootpath = PATH.join(home(), '.gitke-data');
 
-FS.ensureDir(cachPath);
+function getTomlConf(_rootPath) {
+  const confPath = PATH.join(__dirname, '..', 'conf', 'conf.toml');
+  let tomlStr = FS.readFileSync(confPath, 'utf8');
+  return tomlStr.replace(/\{\{rootpath\}\}/g, _rootPath);
+}
 
-module.exports = {
-  // pid 存储目录
-  pidPath: path.join(cachPath, 'gitke.pid'),
-  // Git 仓存储目录
-  reposPath: path.join(cachPath, 'repos'),
-  // sqlite数据库存放目录
-  sqliteDataPath: path.join(cachPath, 'gitke.sqlite3'),
-  // 数据库设置
-  database: {
-    dialect: 'sqlite'
-  },
-  // server配置
-  server: {
-    host: 'localhost',
-    port: 2018
+module.exports = (() => {
+  const confStr = getTomlConf(rootpath);
+  const userConf = PATH.join(rootpath, 'conf.toml');
+  FS.ensureDir(rootpath);
+  if (!FS.pathExistsSync(userConf)) {
+    FS.outputFileSync(userConf, confStr);
   }
-};
+
+  let tomlStr = FS.readFileSync(userConf, 'utf8');
+  return toml.parse(tomlStr)
+})();

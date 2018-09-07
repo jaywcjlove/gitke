@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "DEBUG=git:* nodemon src/index.js"
+    "start": "node bin/gitke",
+    "dev": "DEBUG=git:* nodemon bin/gitke"
+  },
+  "bin": {
+    "gitke": "bin/gitke"
   },
   "keywords": [
     "git"
@@ -20,6 +23,7 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
+    "colors-cli": "^1.0.17",
     "dayjs": "^1.7.5",
     "fs-extra": "^7.0.0",
     "git-side-band-message": "0.0.3",
@@ -33,12 +37,14 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "koa-view": "^2.1.1",
+    "local-ip-url": "^1.0.1",
     "mime": "^2.3.1",
     "nodegit": "^0.22.2",
     "os-homedir": "^1.0.2",
     "sequelize": "^4.38.0",
     "sqlite3": "^4.0.2",
-    "through2": "^2.0.3"
+    "through2": "^2.0.3",
+    "toml": "^2.3.3"
   },
   "devDependencies": {
     "nodemon": "^1.18.3"

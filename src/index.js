@@ -7,12 +7,15 @@ const json = require('koa-json');
 const bodyParser = require('koa-bodyparser');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
+const SequelizeStore = require('koa-generic-session-sequelize');
 const view = require('koa-view');
 const static = require('koa-static');
+const prepareUrls = require('local-ip-url/prepareUrls');
+require('colors-cli/toxic')
 
-const SequelizeStore = require('koa-generic-session-sequelize');
 const app = new Koa();
 
+const conf = require('../conf/conf');
 const Models = require('../conf/sequelize');
 
 app.keys = ['gitke:session'];
@@ -66,30 +69,40 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-Models.sequelize.sync().then(async () => {
-  const password = crypto.createHmac('sha256', 'admin').digest('hex');
-  // 初始化管理员账号
-  const users = await Models.users.findOrCreate({
-    where: {id: 1},
-    defaults: {
-      username: 'admin',
-      name: 'admin',
-      admin: true,
-      password,
-      email: 'admin@admin.com',
-    }
+module.exports = () => {
+  const localIpUrl = prepareUrls({
+    protocol: 'http',
+    host: conf.server.host,
+    port: conf.server.port
   });
-  if (users && users.length > 0 && users[0].id) {
-    await Models.namespaces.findOrCreate({
+  Models.sequelize.sync().then(async () => {
+    const password = crypto.createHmac('sha256', 'admin').digest('hex');
+    // 初始化管理员账号
+    const users = await Models.users.findOrCreate({
       where: { id: 1 },
       defaults: {
-        name: users[0].username,
-        path: users[0].username,
-        owner_id: users[0].id,
+        username: 'admin',
+        name: 'admin',
+        admin: true,
+        password,
+        email: 'admin@admin.com',
       }
     });
-  }
-}).then(async () => {
-  app.listen(2018);
-  console.log('  > listening on port http://127.0.0.1:2018');
-});
+    if (users && users.length > 0 && users[0].id) {
+      await Models.namespaces.findOrCreate({
+        where: { id: 1 },
+        defaults: {
+          name: users[0].username,
+          path: users[0].username,
+          owner_id: users[0].id,
+        }
+      });
+    }
+  }).then(async () => {
+    app.listen(conf.server.port);
+    console.log(`  > Config: ${conf.confPath.cyan}`);
+    console.log(`  > Server Listening at Local: ${localIpUrl.localUrl.cyan}`);
+    console.log(`  >           On Your Network: ${localIpUrl.lanUrl.cyan}`);
+    console.log();
+  });
+}

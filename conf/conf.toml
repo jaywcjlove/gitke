@@ -1,0 +1,19 @@
+
+# Pid 存储目录
+pidPath = '{{rootpath}}/gitke.pid'
+# Git 仓存储目录
+reposPath = '{{rootpath}}/repos'
+# SQLite 数据库存放目录
+sqliteDataPath = '{{rootpath}}/gitke.sqlite3'
+# Conf 配置目录
+confPath ='{{rootpath}}/conf.toml'
+
+# 数据库
+[database]
+  # 数据库设置
+  dialect = 'sqlite'
+
+# Server 配置
+[server]
+  host = '0.0.0.0'
+  port = 2018
