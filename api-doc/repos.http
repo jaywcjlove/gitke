@@ -11,11 +11,6 @@
 GET {{baseUrl}}/api/user/orgs
 Content-Type: {{contentType}}
 
-### 获取 README
-
-GET {{baseUrl}}/api/repos/admin/test/readme
-Content-Type: {{contentType}}
-
 ### 用户项目列表
 
 @username = admin
@@ -41,10 +36,10 @@ Content-Type: {{contentType}}
 ### 项目文件列表
 
 @id = 13
-	
-# @apiParam {String} id 项目ID	
-# @apiParam {String} [path] 存储库中的路径	
-# @apiParam {String} [ref] 存储库分支或标记的名称，如果没有给出默认分支	
+
+# @apiParam {String} id 项目ID
+# @apiParam {String} [path] 存储库中的路径
+# @apiParam {String} [ref] 存储库分支或标记的名称，如果没有给出默认分支
 # @apiParam {String} [recursive] 用于获取递归树的布尔值（默认为false）
 
 GET {{baseUrl}}/api/repos/{{id}}/tree
@@ -56,11 +51,37 @@ Content-Type: {{contentType}}
 # @apiSuccess message 提交commit内容 "Add repo tree API parameter path.\n"
 # @apiSuccess messageRaw 提交commit内容 "Add repo tree API parameter path.\n"
 # @apiSuccess owner 返回 { "name": "jaywcjlove", "email": "398188662@qq.com" }
-# @apiSuccess amend 
+# @apiSuccess amend
 # @apiSuccess time 535736727
 # @apiSuccess date 2018-08-31T17:32:07.000Z"
 # @apiSuccess timeMs 535736727000
 # @apiSuccess timeOffset 80
 # @apiSuccess isFile alse
 # @apiSuccess path 返回路径
-# @apiSuccess entryCount 
+# @apiSuccess entryCount
+
+
+
+### 获取 README
+
+GET {{baseUrl}}/api/repos/{{username}}/{{repo}}/readme
+Content-Type: {{contentType}}
+
+
+### 获取文件详情
+
+@ref = master
+# @filepath = conf/sequelize.js
+@filepath = README.md
+@repo2 = gitke
+
+# http://localhost:19870/admin/gitke/blob/master/conf/conf.js
+GET {{baseUrl}}/api/repos/{{username}}/{{repo2}}/blob/{{ref}}/{{filepath}}
+Content-Type: {{contentType}}
+
+### 获取文件内容
+
+# http://localhost:19870/admin/gitke/raw/master/conf/conf.js
+# /:owner/:repo/raw/:ref/*
+
+GET {{baseUrl}}/{{username}}/{{repo2}}/raw/{{ref}}/{{filepath}}

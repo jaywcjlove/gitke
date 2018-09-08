@@ -9,7 +9,7 @@ git clone http://127.0.0.1:2018/admin/test.git test
 git fetch http://127.0.0.1:2018/admin/test.git test
 ```
 
-## Git Protocols and APIs
+## Git APIs
 
 Serving content of a file in a git repo.
 

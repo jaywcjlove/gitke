@@ -111,51 +111,51 @@ exports.getEntrysCommit = (tree = [], repo, firstCommitOnMasterSha) => {
   if (!tree || tree.length === 0) return [];
   return Promise.all(tree.map(async (item) => {
     const props = { ...item };
-    // if (item.path) {
-    //   let root = null;
-    //   const walk = repo.createRevWalk();
-    //   try {
-    //     walk.pushGlob('refs/heads/*');
-    //     // walk.pushRef('refs/heads/master')
-    //     // walk.pushHead()
-    //     walk.sorting(nodegit.Revwalk.SORT.TIME, nodegit.Revwalk.SORT.REVERSE);
-    //     await (async function step() {
-    //       let oid = null;
-    //       try {
-    //         oid = await walk.next();
-    //       } catch (error) {
-    //         return;
-    //       }
-    //       if (oid == null) {
-    //         return;
-    //       }
-    //       const commit = await nodegit.Commit.lookup(repo, oid)
-    //       let entry = null;
-    //       try {
-    //         entry = await commit.getEntry(item.path);
-    //       }
-    //       catch (err) {
-    //         if (err.errno !== -3) {
-    //           throw err;
-    //         }
-    //       }
-    //       if (entry != null) {
-    //         root = commit;
-    //         if (entry.oid() === item.id) {
-    //           return;
-    //         }
-    //       }
-    //       await step();
-    //     })()
-    //   }
-    //   finally {
-    //     walk.free();
-    //   }
-    //   const string = root.message();
-    //   const sha = root.sha();
-    //   props.message = string;
-    //   props.sha = sha;
-    // }
+    if (item.path) {
+      let root = null;
+      const walk = repo.createRevWalk();
+      try {
+        walk.pushGlob('refs/heads/*');
+        // walk.pushRef('refs/heads/master')
+        // walk.pushHead()
+        walk.sorting(nodegit.Revwalk.SORT.TIME, nodegit.Revwalk.SORT.REVERSE);
+        await (async function step() {
+          let oid = null;
+          try {
+            oid = await walk.next();
+          } catch (error) {
+            return;
+          }
+          if (oid == null) {
+            return;
+          }
+          const commit = await nodegit.Commit.lookup(repo, oid)
+          let entry = null;
+          try {
+            entry = await commit.getEntry(item.path);
+          }
+          catch (err) {
+            if (err.errno !== -3) {
+              throw err;
+            }
+          }
+          if (entry != null) {
+            root = commit;
+            if (entry.oid() === item.id) {
+              return;
+            }
+          }
+          await step();
+        })()
+      }
+      finally {
+        walk.free();
+      }
+      const string = root.message();
+      const sha = root.sha();
+      props.message = string;
+      props.sha = sha;
+    }
 
     // if (item.path && (item.type === 'commit' || item.type === 'blob')) {
     //   // https://github.com/nodegit/nodegit/issues/220

@@ -11,6 +11,7 @@ router
   .get('/repos/:id/tree', repos.reposTree)
   .get('/repos/:owner/:repo', repos.detail)
   .get('/repos/:owner/:repo/readme', repos.readme)
+  .get('/repos/:owner/:repo/blob/:ref/*', repos.fileDetail)
   .get('/orgs/:org/repos', repos.orgReposList)
   .post('/orgs/:org/repos', repos.created)
 

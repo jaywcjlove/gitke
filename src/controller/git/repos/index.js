@@ -116,6 +116,40 @@ module.exports = {
       ctx.body = { message: err.message, ...err }
     }
   },
+  fileDetail: async (ctx) => {
+    const { owner, repo, ref } = ctx.params;
+    const { reposPath } = ctx.state.conf;
+    const currentRepoPath = PATH.join(reposPath, owner, `${repo}.git`);
+    const filePath = ctx.params[0];
+    try {
+      const porps = {};
+      const gitRepo = await Git.Repository.open(currentRepoPath);
+      const reqRef = await gitRepo.getReference(ref);
+      const obj = await reqRef.peel(Git.Object.TYPE.COMMIT);
+      const commitlookup = await Git.Commit.lookup(gitRepo, obj.id());
+      const tree = await commitlookup.getTree();
+      const entry = await tree.getEntry(filePath);
+      porps.id = entry.oid();
+      porps.ref = reqRef.name();
+
+      const blob = await entry.getBlob()
+      ctx.body = {
+        ...porps,
+        content: blob.toString(),
+        parsePath: PATH.parse(filePath),
+        path: filePath,
+        has: blob.id,
+        refName: blob.id,
+        filemode: blob.filemode(),
+        rawsize: blob.rawsize(),
+      }
+      blob.free();
+      tree.free();
+    } catch (err) {
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
+  },
   reposTree: async (ctx) => {
     const { id } = ctx.params;
     const { userInfo } = ctx.session;
@@ -142,7 +176,7 @@ module.exports = {
       const { reposPath } = ctx.state.conf;
       const currentRepoPath = PATH.join(reposPath, projects.namespace.name, `${projects.name}.git`);
       const gitRepo = await Git.Repository.open(currentRepoPath);
-      
+
       // 空仓库返回 README.md 说明内容
       let emptyRepoReadme = await readFile(PATH.join(__dirname, 'EmptyRepo.md'));
       if (gitRepo.isEmpty() === 1) {
@@ -184,14 +218,33 @@ module.exports = {
 
       // 参数 path 处理，存储库中的路径
       if (ctx.query.path) {
+        body.parsePath = PATH.parse(ctx.query.path);
         let treeObj = await commit.getEntry(ctx.query.path);
         if (treeObj.isFile()) {
-          body.isFile = treeObj.isFile();
-          treeObj = await treeObj.getBlob();
+          // try {
+          //   // repo.getCommit("bf1da765e357a9b936d6d511f2c7b78e0de53632");
+          //   // const commit = await Git.Commit.lookup(gitRepo, treeObj.oid())
+          //   const commits = await gitRepo.getCommit(treeObj.oid())
+          //   console.log('entry:', commits.__proto__)
+          // } catch (error) {
+          //   console.log('error:', error)
+          // }
+          const entry = await commit.getEntry(treeObj.path());
+          const local = await treeObj.toObject(gitRepo)
+          // const aa = await local.lookupByPath(treeObj.path(), Git.Object.TYPE.BLOB)
+          // console.log('treeObj:', treeObj.__proto__)
+          // console.log('local:', local.__proto__)
+          // console.log('local:', local.owner())
+          // console.log('local:', local.lookupByPath(treeObj.path(), Git.Object.TYPE.BLOB))
+          // console.log('treeObj:', treeObj.path())
+          const blob = await Git.Blob.lookup(gitRepo, treeObj.oid());
+          body.rawsize = blob.rawsize();
+          body.readmeContent = blob.content().toString();
+          body.isFile = true;
           body.path = ctx.query.path;
           body.tree = [];
-          body.readmeContent = treeObj.toString();
           ctx.body = body;
+          blob.free()
           return;
         }
         treeObj = await treeObj.getTree(treeObj.sha());
