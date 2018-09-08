@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../../../components/PageHeader';
 import Icon from '../../../components/Icon/Repos';
 import Markdown from '../../../components/Markdown';
+import CodeView from '../../../components/CodeView';
 import { urlToList } from '../../../utils/utils';
 import styles from './index.less';
 import CloneModal from './CloneModal';
@@ -92,14 +93,19 @@ class Repo extends PureComponent {
     );
   }
   render() {
-    const { detail, match, reposTree, reference } = this.props;
+    const { detail, match, reposTree, fileDetail, reference } = this.props;
     const { owner, repo } = match.params;
     const breadcrumbData = urlToList(reposTree.path || '');
     if (breadcrumbData && breadcrumbData.length > 0) {
       breadcrumbData.unshift({ name: repo, path: `/${owner}/${repo}` });
     }
-    const isReadme = (reposTree && reposTree.isFile && /\.(md|markdown)/g.test(reposTree.parsePath.ext));
-    console.log('reposTree:', reposTree);
+    const isReadme = (reposTree && fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext));
+    let lang = '';
+    if (fileDetail && fileDetail.parsePath && (fileDetail.parsePath.ext || /^\./.test(fileDetail.parsePath.name))) {
+      lang = fileDetail.parsePath.ext;
+      lang = lang.replace(/^\./, '');
+      if (/^\./.test(fileDetail.parsePath.name) && !lang) lang = fileDetail.parsePath.name.replace(/^\./, '');
+    }
     return (
       <PageHeader
         title={(
@@ -126,7 +132,6 @@ class Repo extends PureComponent {
                 if (breadcrumbData.length - 1 === key) {
                   delete item.path;
                 }
-                console.log('item.path:', breadcrumbData.length, key, item.path);
                 return (
                   <Breadcrumb.Item {...props}>
                     {item.path && <Link to={item.path}>{item.name}</Link>}
@@ -151,7 +156,8 @@ class Repo extends PureComponent {
             columns={this.state.columns}
           />
         )}
-        {isReadme && this.readmeContent(reposTree.readmeContent)}
+        {!isReadme && reposTree.isFile && fileDetail && <CodeView lang={lang} source={fileDetail.content} />}
+        {isReadme && this.readmeContent(fileDetail.content)}
       </PageHeader>
     );
   }
@@ -160,6 +166,7 @@ class Repo extends PureComponent {
 const mapState = ({ repo }) => ({
   reference: repo.reference,
   detail: repo.detail,
+  fileDetail: repo.fileDetail,
   reposTree: repo.reposTree,
   readmeContent: repo.readmeContent,
 });
