@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@rematch/core": "^0.5.4",
+    "@uiw/copy-to-clipboard": "^1.0.0",
     "@uiw/react-monacoeditor": "^1.0.6",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
@@ -26,7 +27,7 @@
     "react-markdown": "^3.4.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "uiw": "^1.16.1"
+    "uiw": "^1.16.3"
   },
   "devDependencies": {
     "kkt": "^2.0.7",

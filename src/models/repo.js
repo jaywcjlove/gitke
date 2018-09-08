@@ -5,6 +5,7 @@ import history from '../history';
 export default {
   state: {
     detail: {},
+    reference: 'master',
     readmeContent: '',
     reposTree: {},
     repos: {

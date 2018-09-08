@@ -108,7 +108,7 @@ export const getRouterData = () => {
       component: dynamicWrapper(['account'], () => import('../routes/owner/stars')),
     },
     '/:owner/:repo': {
-      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo')),
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/index')),
     },
     '/:owner/:repo/issues': {
       component: dynamicWrapper(['account'], () => import('../routes/repo/issues')),
@@ -126,10 +126,10 @@ export const getRouterData = () => {
       component: dynamicWrapper(['account'], () => import('../routes/repo/tree/branch')),
     },
     '/:owner/:repo/tree/:branch/**': {
-      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo')),
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/index')),
     },
     '/:owner/:repo/blob/:branch/**': {
-      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo')),
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/index')),
     },
   };
   return conf;

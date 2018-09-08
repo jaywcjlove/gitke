@@ -87,3 +87,38 @@
     }
   }
 }
+
+
+.fileNavigation {
+  margin-bottom: 10px;
+  :global {
+    .w-breadcrumb .w-breadcrumb-item:first-child a {
+      font-weight: bold;
+    }
+    .w-breadcrumb a {
+      color: #0366d6;
+    }
+    .w-breadcrumb-item-separator {
+      margin: 0 5px;
+    }
+  }
+}
+
+.cloneModel:global(.w-input.w-input-addon) {
+  width: 100%;
+}
+.cloneModel {
+  :global {
+    .w-input-addon-after {
+      padding: 0;
+    }
+  }
+}
+
+.cloneModelInfo {
+  :global {
+    .w-modal-content {
+      overflow: initial;
+    }
+  }
+}
