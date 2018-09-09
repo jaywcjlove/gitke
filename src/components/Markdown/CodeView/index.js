@@ -37,7 +37,7 @@ export default class CodeView extends Component {
       this.highlight('html');
       return;
     }
-    if (/^(ini|toml)$/.test(lang)) {
+    if (/^(ini|toml|javascript)$/.test(lang)) {
       return import(`./prismjs/${lang}.js`).then(() => {
         this.highlight(lang);
       }).catch((err) => {
