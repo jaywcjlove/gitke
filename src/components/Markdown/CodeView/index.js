@@ -27,7 +27,7 @@ export default class CodeView extends Component {
     if (/(bat)$/.test(language)) lang = 'batch';
     if (/(py)$/.test(language)) lang = 'python';
     if (/(rb)$/.test(language)) lang = 'ruby';
-    if (/(toml|gitconfig|editorconfig|gitmodules)$/.test(language)) lang = 'ini';
+    if (/(gitconfig|editorconfig|gitmodules)$/.test(language)) lang = 'ini';
     if (/(yml)$/.test(language)) lang = 'yaml';
     if (/(styl)$/.test(language)) lang = 'stylus';
     if (/(stylelintrc|postcssrc)$/.test(language)) lang = 'json';
@@ -36,6 +36,13 @@ export default class CodeView extends Component {
     if (/^(html|htm|xml|ejs)/.test(language)) {
       this.highlight('html');
       return;
+    }
+    if (/^(ini|toml)$/.test(lang)) {
+      return import(`./prismjs/${lang}.js`).then(() => {
+        this.highlight(lang);
+      }).catch((err) => {
+        throw (err);
+      });
     }
     if (!langs.includes(lang)) {
       this.highlight(lang);

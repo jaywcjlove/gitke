@@ -107,7 +107,7 @@ class Repo extends PureComponent {
       if (/^\./.test(fileDetail.parsePath.name) && !lang) lang = fileDetail.parsePath.name.replace(/^\./, '');
     }
     let emptyReadme = '';
-    if (reposTree && reposTree.tree && reposTree.tree.length === 0 && reposTree.readmeContent) {
+    if (reposTree && reposTree.tree && !reposTree.isFile && reposTree.tree.length === 0 && reposTree.readmeContent) {
       isReadme = true;
       emptyReadme = reposTree.readmeContent;
     }
