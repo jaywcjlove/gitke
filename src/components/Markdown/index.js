@@ -16,6 +16,7 @@ export default class Markdown extends Component {
           source={source}
           escapeHtml={false}
           renderers={{
+            // code: ({ value, language }) => <CodeView lang={language} value={value} />,
             code: InlineCode,
             heading: Heading,
             listItem: ListItem,

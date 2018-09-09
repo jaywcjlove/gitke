@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../../../components/PageHeader';
 import Icon from '../../../components/Icon/Repos';
 import Markdown from '../../../components/Markdown';
-import CodeView from '../../../components/CodeView';
+import CodeView from '../../../components/Markdown/CodeView';
 import { urlToList } from '../../../utils/utils';
 import styles from './index.less';
 import CloneModal from './CloneModal';
@@ -156,7 +156,14 @@ class Repo extends PureComponent {
             columns={this.state.columns}
           />
         )}
-        {!isReadme && reposTree.isFile && fileDetail && <CodeView lang={lang} source={fileDetail.content} />}
+        {!isReadme && reposTree.isFile && fileDetail && (
+          <div>
+            <div>
+              test
+            </div>
+            <CodeView lineHighlight lang={lang} className={styles.codeView} value={fileDetail.content} />
+          </div>
+        )}
         {isReadme && this.readmeContent(fileDetail.content)}
       </PageHeader>
     );
