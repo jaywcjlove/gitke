@@ -31,7 +31,7 @@ export default class CodeView extends Component {
     if (/(yml)$/.test(language)) lang = 'yaml';
     if (/(styl)$/.test(language)) lang = 'stylus';
     if (/(stylelintrc|postcssrc)$/.test(language)) lang = 'json';
-    if (/(sh|shell)$/.test(language)) lang = 'bash';
+    if (/(sh|shell|bash|bats|cgi|command|fcgi|ksh|sh.in|tmux|tool|zsh|bash_history|bash_logout|bash_profile|bashrc|cshrc|login|profile|zlogin|zlogout|zprofile|zshenv|zshrc)$/.test(language)) lang = 'bash';
     if (/(ps1|psm1)$/.test(language)) lang = 'powershell';
     if (/^(html|htm|xml|ejs)/.test(language)) {
       this.highlight('html');

@@ -99,12 +99,17 @@ class Repo extends PureComponent {
     if (breadcrumbData && breadcrumbData.length > 0) {
       breadcrumbData.unshift({ name: repo, path: `/${owner}/${repo}` });
     }
-    const isReadme = (reposTree && fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext));
+    let isReadme = (reposTree && fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext));
     let lang = '';
     if (fileDetail && fileDetail.parsePath && (fileDetail.parsePath.ext || /^\./.test(fileDetail.parsePath.name))) {
       lang = fileDetail.parsePath.ext;
       lang = lang.replace(/^\./, '');
       if (/^\./.test(fileDetail.parsePath.name) && !lang) lang = fileDetail.parsePath.name.replace(/^\./, '');
+    }
+    let emptyReadme = '';
+    if (reposTree && reposTree.tree && reposTree.tree.length === 0 && reposTree.readmeContent) {
+      isReadme = true;
+      emptyReadme = reposTree.readmeContent;
     }
     return (
       <PageHeader
@@ -164,7 +169,7 @@ class Repo extends PureComponent {
             <CodeView lineHighlight language={lang} className={styles.codeView} value={fileDetail.content} />
           </div>
         )}
-        {isReadme && this.readmeContent(fileDetail.content)}
+        {isReadme && this.readmeContent(emptyReadme || fileDetail.content)}
       </PageHeader>
     );
   }
