@@ -11,33 +11,38 @@ export default class CodeView extends Component {
     super(props);
     this.state = {
       codeHtml: [],
-      lang: '',
     };
   }
   componentDidMount() {
-    const { lang } = this.props;
-    let language = lang || 'markup';
-    if (/(js)/.test(lang)) language = 'javascript';
-    if (/(tsx)/.test(lang)) language = 'jsx';
-    if (/(toml|gitconfig|editorconfig|gitmodules)/.test(lang)) language = 'ini';
-    if (/(yml)/.test(lang)) language = 'yaml';
-    if (/(styl)/.test(lang)) language = 'stylus';
-    if (/(stylelintrc)/.test(lang)) language = 'json';
-    if (/(sh|shell)/.test(lang)) language = 'powershell';
-    console.log('language:', language);
-    language = language.toLowerCase();
+    const { language } = this.props;
+    let lang = language;
+    if (language) {
+      lang = language.toLowerCase();
+    }
 
+    if (/(tex)$/.test(language)) lang = 'latex';
+    if (/(h)$/.test(language)) lang = 'c';
+    if (/(js)$/.test(language)) lang = 'javascript';
+    if (/(tsx)$/.test(language)) lang = 'jsx';
+    if (/(bat)$/.test(language)) lang = 'batch';
+    if (/(py)$/.test(language)) lang = 'python';
+    if (/(rb)$/.test(language)) lang = 'ruby';
+    if (/(toml|gitconfig|editorconfig|gitmodules)$/.test(language)) lang = 'ini';
+    if (/(yml)$/.test(language)) lang = 'yaml';
+    if (/(styl)$/.test(language)) lang = 'stylus';
+    if (/(stylelintrc|postcssrc)$/.test(language)) lang = 'json';
+    if (/(sh|shell)$/.test(language)) lang = 'bash';
+    if (/(ps1|psm1)$/.test(language)) lang = 'powershell';
     if (/^(html|htm|xml|ejs)/.test(language)) {
       this.highlight('html');
       return;
     }
-    if (!langs.includes(language)) {
-      this.highlight(language);
+    if (!langs.includes(lang)) {
+      this.highlight(lang);
       return;
     }
-    console.log('language:', language);
-    return import(`prismjs/components/prism-${language}.min.js`).then(() => {
-      this.highlight(language);
+    return import(`prismjs/components/prism-${lang}.min.js`).then(() => {
+      this.highlight(lang);
     }).catch((err) => {
       throw (err);
     });
@@ -57,7 +62,7 @@ export default class CodeView extends Component {
     const countLine = this.state.html ? this.state.html.split('\n') : [''];
     return (
       <pre ref={this.getInstance.bind(this)} data-line="1" className={classNames('highlight', className)}>
-        <code style={{ height: countLine.length * 20 }} className={classNames(`language-${this.props.lang}`)} dangerouslySetInnerHTML={{ __html: this.state.html }} />
+        <code style={{ height: countLine.length * 20 }} className={classNames(`language-${this.props.language}`)} dangerouslySetInnerHTML={{ __html: this.state.html }} />
         {lineHighlight && countLine.map((item, idx) => {
           return (
             <div key={idx} id={`L${idx + 1}`} style={{ left: 0, top: idx * 20 }} className="line-number" data-start={idx + 1} />
@@ -73,8 +78,9 @@ CodeView.propTypes = {
   value: PropTypes.string,
   lang: PropTypes.string,
 };
+
 CodeView.defaultProps = {
   lineHighlight: false,
+  language: 'markup',
   value: '',
-  lang: 'markup',
 };

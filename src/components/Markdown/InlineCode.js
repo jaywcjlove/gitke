@@ -9,7 +9,7 @@ export default class Canvas extends PureComponent {
   render() {
     const { language, value } = this.props;
     return (
-      <CodeView lang={language} value={value} />
+      <CodeView language={language} value={value} />
     );
   }
 }

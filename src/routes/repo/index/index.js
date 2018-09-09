@@ -161,7 +161,7 @@ class Repo extends PureComponent {
             <div>
               test
             </div>
-            <CodeView lineHighlight lang={lang} className={styles.codeView} value={fileDetail.content} />
+            <CodeView lineHighlight language={lang} className={styles.codeView} value={fileDetail.content} />
           </div>
         )}
         {isReadme && this.readmeContent(fileDetail.content)}
