@@ -1,5 +1,6 @@
 const nodegit = require('nodegit');
-const path = require('path');
+const promisify = require('util').promisify;
+const exec = promisify(require('child_process').exec);
 
 // https://www.nodegit.org/api/object/#TYPE
 // Object.TYPE.ANY -2
@@ -15,7 +16,7 @@ const path = require('path');
 
 /**
  * Nodegit entries 获取目录
- * @param {Object} treeWalker 
+ * @param {Object} treeWalker
  * @param {Boolean} [recursive=false] 以广度优先顺序递归地遍历树。
  */
 exports.getFiles = (treeWalker, recursive = false) => {
@@ -67,7 +68,7 @@ exports.getFiles = (treeWalker, recursive = false) => {
  * 2. 文件夹，排在第二位
  * 3. 隐藏文件，排第三位
  * 4. 文件，排第四位
- * @param {Array} tree 
+ * @param {Array} tree
  */
 exports.repoFilesSort = (tree = []) => {
   const hiddenFolder = tree.filter(_item => /^\./.test(_item.name) && /^(tree|commit)$/.test(_item.type));
@@ -101,7 +102,67 @@ exports.getEntrysInfo = (tree = [], repo) => {
 }
 
 /**
+ * 获取所有文件，对应在Tree下面最新的提交信息
+ *
+ * @param {String} repoPath 仓库路径
+ * @param {String} branch 仓当前 ref
+ * @param {Array} data 目录数组
+ */
+exports.getFilesCommitInfo = async (repoPath, branch, data) => {
+  return Promise.all(data.map(async (item) => {
+    const props = { ...item };
+    const commit = await this.getFileCommit(repoPath, item.path, branch);
+    props.message = commit.message;
+    props.treehash = commit.hash;
+    props.committer = commit.committer;
+    return props;
+  })).catch((err) => {
+    throw new Error(`Can't get commit, ${err}`);
+  });;
+}
+
+/**
+ * 获取某个路径的提交信息
+ * 输出内容：https://git-scm.com/docs/git-log#_pretty_formats
+ * 输出commit的总数：git rev-list --all --count
+ * 通过hash查看内容：git --no-pager show 5b9cf7 --summary --pretty="%H"
+ *
+ * @param {String} repoPath 仓地址
+ * @param {String} relPath 文件在仓中的路径
+ * @param {String} ref ref ?= master
+ */
+exports.getFileCommit = async (repoPath, relPath, ref = "master") => {
+  try {
+    const format = '\n=>[hash]:%H\n=>[parentHashes]:%P\n=>[shortHash]:%h\n=>[treeHash]:%T\n=>[author-name]:%an\n=>[author-email]:%ae\n=>[author-relativedate]:%ar\n=>[author-timestamp]:%at\n=>[committer-name]:%cn\n=>[committer-email]:%ce\n=>[committer-relativedate]:%cr\n=>[committer-timestamp]:%ct\n=>[message]:%s';
+    const { stdout } = await exec(`git rev-list --pretty="${format}" --max-count=1 ${ref} -- ${relPath}`, {
+      cwd: repoPath,
+    });
+    const data = {};
+    stdout.split('\n=>').forEach((item) => {
+      if (/^\[/.test(item)) {
+        let key = item.match(/[^\[]([^\[]*)(?=\]\:)/ig);
+        const value = item.replace(/^\[.*\]:/, '');
+        if (key.length > 0 && value) {
+          key = key[0];
+          if (key && key.includes('-')) {
+            key = key.split('-');
+            if (!data[key[0]]) data[key[0]] = {};
+            data[key[0]][key[1]] = value;
+          } else {
+            data[key] = value;
+          }
+        }
+      }
+    });
+    return data;
+  } catch (error) {
+    throw new Error(`Can't get commit, ${error}`);
+  }
+}
+
+/**
  * 获取每个问文件的 hash 和 message
+ * [弃用]: 在大仓库下性能低下
  * https://github.com/nodegit/nodegit/issues/1174
  * @param {Array} tree 每个文件的JSON对象
  * @param {Object} repo Nodegit 仓对象
@@ -157,37 +218,6 @@ exports.getEntrysCommit = (tree = [], repo, firstCommitOnMasterSha) => {
       props.sha = sha;
     }
 
-    // if (item.path && (item.type === 'commit' || item.type === 'blob')) {
-    //   // https://github.com/nodegit/nodegit/issues/220
-    //   // 获取单个文件的提交
-    //   const walker = await repo.createRevWalk();
-    //   walker.push(firstCommitOnMasterSha);
-    //   walker.sorting(nodegit.Revwalk.SORT.Time);
-    //   const history = await walker.fileHistoryWalk(item.path, 500);
-    //   history.forEach((entry, index) => {
-    //     const commit = entry.commit;
-    //     if (index === 0) {
-    //       props.author = {};
-    //       props.author.name = commit.author().name();
-    //       props.author.email = commit.author().email();
-    //       props.message = commit.message();
-    //       props.sha = commit.sha();
-    //       props.time = commit.time();
-    //     }
-    //   });
-    // }
-
-    // if (item.path === 'conf' && item.type === 'tree') {
-    //   const treeEntrys = await repo.getTree(item.id);
-    //   const treeEntry = treeEntrys.entryByIndex(0);
-    //   const refreshIndex = await repo.refreshIndex();
-    //   const indexEntryFolder = refreshIndex.getByPath(treeEntry.path());
-    // }
-
-    // const blob = await nodegit.Blob.lookup(repo, item.id);
-    // // const rawsize = await blob.rawsize()
-    // // const content = await blob.content()
-    // // const owner = await blob.owner();
     return props;
   })).catch((err) => {
     console.log('err:getEntrysCommit:', err);

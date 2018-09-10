@@ -4,7 +4,7 @@ const FS = require('fs-extra')
 const Models = require('../../../../conf/sequelize');
 const { readFile } = require('../../../utils/fsExtra');
 
-const { getFiles, repoFilesSort, getEntrysInfo, getEntrysCommit } = require('./util');
+const { getFiles, repoFilesSort, getEntrysInfo, getFilesCommitInfo, getFileCommit } = require('./util');
 
 module.exports = {
   created: async (ctx) => {
@@ -131,10 +131,11 @@ module.exports = {
       const entry = await tree.getEntry(filePath);
       porps.id = entry.oid();
       porps.ref = reqRef.name();
-
-      const blob = await entry.getBlob()
+      const commit = await getFileCommit(currentRepoPath, filePath, ref);
+      const blob = await entry.getBlob();
       ctx.body = {
         ...porps,
+        ...commit,
         content: blob.toString(),
         parsePath: PATH.parse(filePath),
         path: filePath,
@@ -146,6 +147,7 @@ module.exports = {
       blob.free();
       tree.free();
     } catch (err) {
+      console.log('err:', err);
       ctx.response.status = err.statusCode || err.status || 500;
       ctx.body = { message: err.message, ...err }
     }
@@ -257,18 +259,14 @@ module.exports = {
       commit = await commit.walk(recursive);
       const treeArray = await getFiles(commit, recursive);
       const oldTree = [...treeArray];
-      // 读取默认目录中的 README.md 文件内容
-      let readme = treeArray.filter(item => item.type === 'blob' && /readme.md$/.test(item.path.toLocaleLowerCase()));
-      if (readme && readme.length > 0) {
-        readme = readme[0];
-        const blob = await readme.entry.getBlob();
-        body.readmeContent = await blob.toString();
-      }
+      // 目录文件排序
       let treeCommit = repoFilesSort([...oldTree]);
-      // 获取
+      // 获取 个文件的信息
       treeCommit = await getEntrysInfo(treeCommit, gitRepo, currentRepoPath);
       // 获取每个文件的 Commit 信息，性能低下暂不做处理
       // treeCommit = await getEntrysCommit(treeCommit, gitRepo, body.sha);
+      // 性能显著提高
+      treeCommit = await getFilesCommitInfo(currentRepoPath, branch, treeCommit);
       body.tree = treeCommit;
       ctx.body = body;
     } catch (err) {
