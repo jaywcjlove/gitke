@@ -9,6 +9,7 @@ import CodeView from '../../../components/Markdown/CodeView';
 import { urlToList, bytesToSize } from '../../../utils/utils';
 import styles from './index.less';
 import CloneModal from './CloneModal';
+import DescriptionEdit from './DescriptionEdit';
 
 class Repo extends PureComponent {
   constructor(props) {
@@ -40,13 +41,9 @@ class Repo extends PureComponent {
         },
         {
           key: 'message',
-          render: (item) => {
-            return (
-              <Link to={item.path} title={item.message}>{item.message}</Link>
-            );
-          },
+          render: item => <Link to={item.path} title={item.message}>{item.message}</Link>,
         },
-        { key: 'age', width: 180 },
+        { key: 'age', className: styles.age },
       ],
     };
   }
@@ -92,6 +89,9 @@ class Repo extends PureComponent {
       </Card>
     );
   }
+  onSubmitDes() {
+    // console.log('~~');
+  }
   render() {
     const { detail, match, reposTree, fileDetail, reference } = this.props;
     const { owner, repo } = match.params;
@@ -99,7 +99,8 @@ class Repo extends PureComponent {
     if (breadcrumbData && breadcrumbData.length > 0) {
       breadcrumbData.unshift({ name: repo, path: `/${owner}/${repo}` });
     }
-    let isReadme = (reposTree && fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext));
+    const isReadmeExt = fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext);
+    let isReadme = (reposTree && isReadmeExt);
     let lang = '';
     // 处理后缀显示传递给组件，代码高亮
     if (fileDetail && fileDetail.parsePath && (fileDetail.parsePath.ext || /^\./.test(fileDetail.parsePath.name))) {
@@ -108,7 +109,7 @@ class Repo extends PureComponent {
       if (/^\./.test(fileDetail.parsePath.name) && !lang) lang = fileDetail.parsePath.name.replace(/^\./, '');
     }
     let emptyReadme = '';
-    // 空仓库先是学习的 README.md
+    // 空仓库 README.md
     if (reposTree && reposTree.tree && !reposTree.isFile && reposTree.tree.length === 0 && reposTree.readmeContent) {
       isReadme = true;
       emptyReadme = reposTree.readmeContent;
@@ -118,11 +119,13 @@ class Repo extends PureComponent {
       if (!fileDetail) return null;
       const codeLine = fileDetail.content.split('\n');
       const slocLine = codeLine.filter(_item => !!_item.replace(/\s/g, ''));
-      return [
-        `${codeLine.length} lines (${slocLine.length} sloc)`,
-        <span key="divider" className={styles.divider} />,
-        bytesToSize(fileDetail.rawsize || 0),
-      ];
+      return (
+        <div className={styles.codeHeader}>
+          {codeLine.length} lines ({slocLine.length} sloc)
+          <span key="divider" className={styles.divider} />
+          {bytesToSize(fileDetail.rawsize || 0)}
+        </div>
+      );
     })();
     return (
       <PageHeader
@@ -139,7 +142,7 @@ class Repo extends PureComponent {
             <Button size="small"><IconUiw type="more" /></Button>
           </div>
         }
-        content={detail.description || 'No description, website, or topics provided.'}
+        content={<DescriptionEdit description={detail.description} onSubmit={this.onSubmitDes.bind(this)} />}
       >
         <div className={styles.fileNavigation}>
           {reposTree.path && (
@@ -174,10 +177,24 @@ class Repo extends PureComponent {
             columns={this.state.columns}
           />
         )}
+        {isReadmeExt && reposTree.isFile && fileDetail && (
+          <Card
+            noHover
+            className={styles.codeViewReadmeCard}
+            title={CodeViewHeader}
+            extra={
+              <div>
+                <Link target="_blank" to={`/${owner}/${repo}/raw/${reference}/${fileDetail.path}`}>Raw</Link>
+              </div>
+            }
+          >
+            {isReadmeExt && this.readmeContent(fileDetail.content)}
+          </Card>
+        )}
         {!isReadme && reposTree.isFile && fileDetail && (
           <Card
             noHover
-            className={styles.codeView}
+            className={styles.codeViewCard}
             title={CodeViewHeader}
             extra={
               <div>
@@ -188,7 +205,7 @@ class Repo extends PureComponent {
             <CodeView lineHighlight language={lang} value={fileDetail.content} />
           </Card>
         )}
-        {isReadme && this.readmeContent(emptyReadme || fileDetail.content)}
+        {isReadme && !reposTree.isFile && this.readmeContent(emptyReadme || fileDetail.content)}
       </PageHeader>
     );
   }
@@ -197,6 +214,7 @@ class Repo extends PureComponent {
 const mapState = ({ repo }) => ({
   reference: repo.reference,
   detail: repo.detail,
+  detailEdit: repo.detailEdit,
   fileDetail: repo.fileDetail,
   reposTree: repo.reposTree,
   readmeContent: repo.readmeContent,

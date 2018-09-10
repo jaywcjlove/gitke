@@ -6,6 +6,7 @@ import history from '../history';
 export default {
   state: {
     detail: {},
+    detailEdit: false,
     fileDetail: null,
     reference: 'master',
     readmeContent: '',
