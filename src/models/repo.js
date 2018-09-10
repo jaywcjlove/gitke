@@ -56,7 +56,7 @@ export default {
             path: `/${options.owner}/${options.repo}/commit/${item.sha}`,
             message: item.message,
           },
-          age: '',
+          age: item.committer && item.committer.relativedate,
         };
       });
       const props = { detail: repos, reposTree };

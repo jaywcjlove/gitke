@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Tooltip, Button } from 'uiw';
 import copyTextToClipboard from '@uiw/copy-to-clipboard';
-import styles from './index.less';
+import styles from './CloneModal.less';
 
 export default class CloneModal extends Component {
   constructor(props) {

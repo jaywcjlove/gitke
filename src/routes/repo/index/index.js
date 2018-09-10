@@ -6,7 +6,7 @@ import PageHeader from '../../../components/PageHeader';
 import Icon from '../../../components/Icon/Repos';
 import Markdown from '../../../components/Markdown';
 import CodeView from '../../../components/Markdown/CodeView';
-import { urlToList } from '../../../utils/utils';
+import { urlToList, bytesToSize } from '../../../utils/utils';
 import styles from './index.less';
 import CloneModal from './CloneModal';
 
@@ -101,16 +101,29 @@ class Repo extends PureComponent {
     }
     let isReadme = (reposTree && fileDetail && fileDetail.parsePath && /\.(md|markdown)$/.test(fileDetail.parsePath.ext));
     let lang = '';
+    // 处理后缀显示传递给组件，代码高亮
     if (fileDetail && fileDetail.parsePath && (fileDetail.parsePath.ext || /^\./.test(fileDetail.parsePath.name))) {
       lang = fileDetail.parsePath.ext;
       lang = lang.replace(/^\./, '');
       if (/^\./.test(fileDetail.parsePath.name) && !lang) lang = fileDetail.parsePath.name.replace(/^\./, '');
     }
     let emptyReadme = '';
+    // 空仓库先是学习的 README.md
     if (reposTree && reposTree.tree && !reposTree.isFile && reposTree.tree.length === 0 && reposTree.readmeContent) {
       isReadme = true;
       emptyReadme = reposTree.readmeContent;
     }
+    // 文件代码预览，头信息
+    const CodeViewHeader = (() => {
+      if (!fileDetail) return null;
+      const codeLine = fileDetail.content.split('\n');
+      const slocLine = codeLine.filter(_item => !!_item.replace(/\s/g, ''));
+      return [
+        `${codeLine.length} lines (${slocLine.length} sloc)`,
+        <span key="divider" className={styles.divider} />,
+        bytesToSize(fileDetail.rawsize || 0),
+      ];
+    })();
     return (
       <PageHeader
         title={(
@@ -162,12 +175,18 @@ class Repo extends PureComponent {
           />
         )}
         {!isReadme && reposTree.isFile && fileDetail && (
-          <div>
-            <div>
-              test
-            </div>
-            <CodeView lineHighlight language={lang} className={styles.codeView} value={fileDetail.content} />
-          </div>
+          <Card
+            noHover
+            className={styles.codeView}
+            title={CodeViewHeader}
+            extra={
+              <div>
+                <Link target="_blank" to={`/${owner}/${repo}/raw/${reference}/${fileDetail.path}`}>Raw</Link>
+              </div>
+            }
+          >
+            <CodeView lineHighlight language={lang} value={fileDetail.content} />
+          </Card>
         )}
         {isReadme && this.readmeContent(emptyReadme || fileDetail.content)}
       </PageHeader>
