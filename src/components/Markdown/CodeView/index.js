@@ -14,12 +14,15 @@ export default class CodeView extends Component {
     };
   }
   componentDidMount() {
-    const { language } = this.props;
+    const { language, value } = this.props;
     let lang = language;
     if (language) {
       lang = language.toLowerCase();
     }
-
+    // shebang(#!) 判断
+    if (/^#!\/usr\/bin\/env\snode/.test(value)) lang = 'javascript';
+    if (/^#!\/usr\/bin\/env\spython/.test()) lang = 'python';
+    if (/^#!\s*\/bin\/(bash|sh)/.test()) lang = 'powershell';
     if (/(tex)$/.test(language)) lang = 'latex';
     if (/(h)$/.test(language)) lang = 'c';
     if (/(js)$/.test(language)) lang = 'javascript';
