@@ -8,7 +8,7 @@ const bodyParser = require('koa-bodyparser');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SequelizeStore = require('koa-generic-session-sequelize');
-const view = require('koa-view');
+const view = require('koa-views');
 const static = require('koa-static');
 const prepareUrls = require('local-ip-url/prepareUrls');
 require('colors-cli/toxic')
@@ -35,12 +35,16 @@ app.use(session({
   proxy: true // if you do SSL outside of node.
 }));
 
+const publicPath = path.join(process.cwd(), 'public');
+
 app.use(cors());
 app.use(koaBody());
 app.use(bodyParser());
 app.use(json());
-app.use(view(path.join(process.cwd(), 'public')));
-app.use(static(path.join(__dirname, '..', 'public')));
+app.use(view(publicPath, {
+  extension: 'html'
+}));
+app.use(static(publicPath));
 
 // 忽略打印资源加载
 function ignoreAssets(mw) {
