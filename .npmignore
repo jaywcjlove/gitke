@@ -5,6 +5,7 @@ sql-data
 package-lock.json
 yarn.lock
 
+.editorconfig
 .cachetest
 .travis.yml
 .gitignore
