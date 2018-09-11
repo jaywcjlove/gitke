@@ -1,6 +1,6 @@
 {
   "name": "gitke",
-  "version": "1.0.0",
+  "version": "1.9.4",
   "description": "",
   "scripts": {
     "start": "node bin/gitke",
