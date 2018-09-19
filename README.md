@@ -1,6 +1,13 @@
 Gitke
 ---
 
+## Install
+
+```bash
+sudo npm install -g gitke --unsafe-perm # running as root
+```
+
+
 ```bash
 git push git@192.168.188.250:owner/repo.git master
 git clone ssh://root@123.123.123.123/opt/my-first-app.git
@@ -32,3 +39,22 @@ The requested file is specified by:
 - [HTTP transfer protocols](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt)
 - [Documentation Common to Pack and Http Protocols](https://github.com/git/git/blob/master/Documentation/technical/protocol-common.txt)
 
+
+## Development
+
+```bash
+git clone https://github.com/jaywcjlove/gitke.git
+sudo npm install --unsafe-perm # running as root
+# Or
+sudo yarn install 
+# Run the app
+# Restart the app automatically every time code changes. 
+# Useful during development.
+npm run dev
+```
+
+Open your browser and visit http://localhost:2018/
+
+## License
+
+The MIT License (MIT)
