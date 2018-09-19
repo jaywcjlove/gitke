@@ -5,8 +5,10 @@ Gitke
 
 ```bash
 sudo npm install -g gitke --unsafe-perm # running as root
+# Run the server
+gitke
+# Open your browser and visit http://localhost:2018/
 ```
-
 
 ```bash
 git push git@192.168.188.250:owner/repo.git master
