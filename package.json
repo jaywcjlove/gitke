@@ -1,6 +1,6 @@
 {
   "name": "gitke",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple git server written in NodeJS",
   "scripts": {
     "start": "node bin/gitke",
