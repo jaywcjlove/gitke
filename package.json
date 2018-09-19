@@ -1,7 +1,7 @@
 {
   "name": "gitke",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.3",
+  "description": "A simple git server written in NodeJS",
   "scripts": {
     "start": "node bin/gitke",
     "dev": "DEBUG=git:* nodemon bin/gitke"
@@ -9,10 +9,23 @@
   "bin": {
     "gitke": "bin/gitke"
   },
+  "bugs": {
+    "url": "https://github.com/jaywcjlove/gitke/issues"
+  },
+  "homepage": "https://github.com/jaywcjlove/gitke#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaywcjlove/gitke.git"
+  },
   "keywords": [
-    "git"
+    "git",
+    "gitke"
   ],
+  "engine": {
+    "node": ">= 8"
+  },
   "author": "Kenny Wong <wowohoo@qq.com>",
+  "contributors": [],
   "license": "MIT",
   "nodemonConfig": {
     "ignore": [
