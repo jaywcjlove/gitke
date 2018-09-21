@@ -163,12 +163,13 @@ module.exports = {
     try {
       // 托管事务
       transaction = await Models.sequelize.transaction();
-      const namespaces = await Models.namespaces.findOne({ where: { name: owner } });
+      const namespaces = await Models.namespaces.findOne({ where: { name: owner }, transaction });
       if (!namespaces.id) ctx.throw(404, 'Owner does not exist!');
-      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }});
-      const projects = Models.projects.findOne({ where: { name: repo, namespace_id: namespaces.id } });
+      const projects = await Models.projects.findOne({ where: { name: repo, namespace_id: namespaces.id }, transaction });
       if (!projects.id) ctx.throw(404, 'Repo does not exist!');
-      await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }});
+      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }, transaction });
+      // 删除用户创建仓库的记录
+      await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }, transaction});
       // remove repo
       await removeDir(PATH.join(reposPath, owner, `${repo}.git`));
       // transaction commit 事务提交
