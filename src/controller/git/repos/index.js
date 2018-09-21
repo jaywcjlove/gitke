@@ -2,7 +2,7 @@ const Git = require("nodegit");
 const PATH = require("path");
 const FS = require('fs-extra')
 const Models = require('../../../../conf/sequelize');
-const { readFile } = require('../../../utils/fsExtra');
+const { readFile, removeDir } = require('../../../utils/fsExtra');
 
 const { getFiles, repoFilesSort, getEntrysInfo, getFilesCommitInfo, getFileCommit } = require('./util');
 
@@ -155,8 +155,31 @@ module.exports = {
     }
   },
   delete: async (ctx) => {
-    const { owner, repo } = ctx.params;
-    ctx.body = { owner, repo };
+    const { owner } = ctx.params;
+    let { repo } = ctx.params;
+    const { reposPath } = ctx.state.conf;
+    repo = repo.replace(/.git$/, '');
+    let transaction;
+    try {
+      // 托管事务
+      transaction = await Models.sequelize.transaction();
+      const namespaces = await Models.namespaces.findOne({ where: { name: owner } });
+      if (!namespaces.id) ctx.throw(404, 'Owner does not exist!');
+      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }});
+      const projects = Models.projects.findOne({ where: { name: repo, namespace_id: namespaces.id } });
+      if (!projects.id) ctx.throw(404, 'Repo does not exist!');
+      await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }});
+      // remove repo
+      await removeDir(PATH.join(reposPath, owner, `${repo}.git`));
+      // transaction commit 事务提交
+      await transaction.commit();
+      ctx.body = { message: `Successfully deleted ${repo}!`};
+    } catch (err) {
+      // 事务回滚
+      if (transaction) await transaction.rollback();
+      ctx.response.status = err.statusCode || err.status || 500;
+      ctx.body = { message: err.message, ...err }
+    }
   },
   reposTree: async (ctx) => {
     const { id } = ctx.params;

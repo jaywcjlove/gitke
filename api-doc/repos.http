@@ -85,3 +85,9 @@ Content-Type: {{contentType}}
 # /:owner/:repo/raw/:ref/*
 
 GET {{baseUrl}}/{{username}}/{{repo2}}/raw/{{ref}}/{{filepath}}
+
+### Remove Repo
+
+@repoTest = test
+
+DELETE {{baseUrl}}/api/repos/{{username}}/{{repoTest}}

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const FS = require('fs-extra');
 
 exports.exists = (path) => {
   return new Promise((resolve, reject) => {
@@ -17,10 +18,18 @@ exports.existsRepo = (repoNamePath) => {
 }
 
 
-exports.readFile = async (path, charset = 'utf8') => {
+exports.readFile = (path, charset = 'utf8') => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, charset, (err, data) => {
       err ? reject(err) : resolve(data);
     });
   });
 };
+
+exports.removeDir = (srcpath) => {
+  return new Promise((resolve, reject) => {
+    FS.remove(srcpath, err => {
+      err ? reject(err) : resolve();
+    })
+  });
+}
