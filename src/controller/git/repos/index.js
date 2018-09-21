@@ -26,6 +26,8 @@ module.exports = {
       bodyData.namespace_id = namespaces.id;
       // 创建仓库信息
       const projects = await Models.projects.create(bodyData, { transaction });
+      // 记录用户创建的仓库
+      await Models.user_interacted_projects.create({ project_id: projects.id, creator_id: bodyData.creator_id }, { transaction });
       const { reposPath } = ctx.state.conf;
       // 验证仓库是否存在
       const currentPath = PATH.join(reposPath, namespaces.path, `${name}.git`);
@@ -151,6 +153,10 @@ module.exports = {
       ctx.response.status = err.statusCode || err.status || 500;
       ctx.body = { message: err.message, ...err }
     }
+  },
+  delete: async (ctx) => {
+    const { owner, repo } = ctx.params;
+    ctx.body = { owner, repo };
   },
   reposTree: async (ctx) => {
     const { id } = ctx.params;

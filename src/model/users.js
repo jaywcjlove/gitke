@@ -1,77 +1,6 @@
 const dayjs = require('dayjs');
-
-// --Sequence
-// CREATE SEQUENCE IF NOT EXISTS "public"."users_id_seq";
-
-// --Table Definition
-// CREATE TABLE "public"."users"(
-//   "id" int4 DEFAULT nextval('users_id_seq':: regclass),
-//   "email" varchar DEFAULT '':: character varying,
-//   "encrypted_password" varchar DEFAULT '':: character varying,
-//   "reset_password_token" varchar,
-//   "reset_password_sent_at" timestamp,
-//   "remember_created_at" timestamp,
-//   "sign_in_count" int4 DEFAULT 0,
-//   "current_sign_in_at" timestamp,
-//   "last_sign_in_at" timestamp,
-//   "current_sign_in_ip" varchar,
-//   "last_sign_in_ip" varchar,
-//   "created_at" timestamp,
-//   "updated_at" timestamp,
-//   "name" varchar,
-//   "admin" bool DEFAULT false,
-//   "projects_limit" int4,
-//   "skype" varchar DEFAULT '':: character varying,
-//   "linkedin" varchar DEFAULT '':: character varying,
-//   "twitter" varchar DEFAULT '':: character varying,
-//   "bio" varchar,
-//   "failed_attempts" int4 DEFAULT 0,
-//   "locked_at" timestamp,
-//   "username" varchar,
-//   "can_create_group" bool DEFAULT true,
-//   "can_create_team" bool DEFAULT true,
-//   "state" varchar,
-//   "color_scheme_id" int4 DEFAULT 1,
-//   "password_expires_at" timestamp,
-//   "created_by_id" int4,
-//   "last_credential_check_at" timestamp,
-//   "avatar" varchar,
-//   "confirmation_token" varchar,
-//   "confirmed_at" timestamp,
-//   "confirmation_sent_at" timestamp,
-//   "unconfirmed_email" varchar,
-//   "hide_no_ssh_key" bool DEFAULT false,
-//   "website_url" varchar DEFAULT '':: character varying,
-//   "notification_email" varchar,
-//   "hide_no_password" bool DEFAULT false,
-//   "password_automatically_set" bool DEFAULT false,
-//   "location" varchar,
-//   "encrypted_otp_secret" varchar,
-//   "encrypted_otp_secret_iv" varchar,
-//   "encrypted_otp_secret_salt" varchar,
-//   "otp_required_for_login" bool DEFAULT false,
-//   "otp_backup_codes" text,
-//   "public_email" varchar DEFAULT '':: character varying,
-//   "dashboard" int4 DEFAULT 0,
-//   "project_view" int4 DEFAULT 0,
-//   "consumed_timestep" int4,
-//   "layout" int4 DEFAULT 0,
-//   "hide_project_limit" bool DEFAULT false,
-//   "unlock_token" varchar,
-//   "otp_grace_period_started_at" timestamp,
-//   "external" bool DEFAULT false,
-//   "incoming_email_token" varchar,
-//   "organization" varchar,
-//   "ghost" bool,
-//   "require_two_factor_authentication_from_group" bool DEFAULT false,
-//   "two_factor_grace_period" int4 DEFAULT 48,
-//   "last_activity_on" date,
-//   "notified_of_own_activity" bool,
-//   "preferred_language" varchar,
-//   "rss_token" varchar,
-//   "theme_id" int2,
-//   PRIMARY KEY("id")
-// );
+const crypto = require("crypto");
+const password = crypto.createHmac("sha256", "admin").digest("hex");
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('users', {
@@ -211,10 +140,10 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   }, {
-      comment: '用户表',
-      timestamps: true,
-      updatedAt: 'updated_at',
-      createdAt: 'created_at',
-      freezeTableName: true
-    });
+    comment: '用户表',
+    timestamps: true,
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
+    freezeTableName: true
+  });
 };

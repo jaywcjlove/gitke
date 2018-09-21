@@ -57,10 +57,10 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   }, {
-      comment: '项目表',
-      timestamps: true,
-      updatedAt: 'updated_at',
-      createdAt: 'created_at',
-      freezeTableName: true
-    });
+    comment: '项目表',
+    timestamps: true,
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
+    freezeTableName: true
+  });
 };
