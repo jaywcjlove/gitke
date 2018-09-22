@@ -160,16 +160,18 @@ module.exports = {
     const { reposPath } = ctx.state.conf;
     repo = repo.replace(/.git$/, '');
     let transaction;
+
     try {
       // 托管事务
       transaction = await Models.sequelize.transaction();
       const namespaces = await Models.namespaces.findOne({ where: { name: owner }, transaction });
-      if (!namespaces.id) ctx.throw(404, 'Owner does not exist!');
+      if (!namespaces || !namespaces.id) ctx.throw(404, 'Owner does not exist!');
       const projects = await Models.projects.findOne({ where: { name: repo, namespace_id: namespaces.id }, transaction });
-      if (!projects.id) ctx.throw(404, 'Repo does not exist!');
-      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }, transaction });
+      if (!projects || !projects.id) ctx.throw(404, 'Repo does not exist!');
+      // await Models.projects.destroy({ where: { id: 1 }});
+      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }, force: true, transaction });
       // 删除用户创建仓库的记录
-      await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }, transaction});
+      await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }, transaction });
       // remove repo
       await removeDir(PATH.join(reposPath, owner, `${repo}.git`));
       // transaction commit 事务提交

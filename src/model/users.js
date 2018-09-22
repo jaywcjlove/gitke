@@ -141,7 +141,6 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     comment: '用户表',
-    timestamps: true,
     updatedAt: 'updated_at',
     createdAt: 'created_at',
     freezeTableName: true

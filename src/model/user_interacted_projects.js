@@ -3,7 +3,7 @@ module.exports = function (sequelize, DataTypes) {
     project_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'users'
+        model: 'projects'
       },
       allowNull: false,
       comment: '项目ID'
@@ -17,9 +17,7 @@ module.exports = function (sequelize, DataTypes) {
       comment: '用户ID'
     },
   }, {
-    comment: '用户管理项目表',
-    timestamps: false,
-      paranoid: true
+    comment: '用户对应的项目隐射表'
   });
   // http://docs.sequelizejs.com/class/lib/model.js~Model.html#static-method-removeAttribute
   // Sequelize does not create id primary key
