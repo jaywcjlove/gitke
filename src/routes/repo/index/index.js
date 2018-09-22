@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../../../components/PageHeader';
 import Icon from '../../../components/Icon/Repos';
 import Markdown from '../../../components/Markdown';
+import RepoPath from '../../../components/RepoPath';
 import CodeView from '../../../components/Markdown/CodeView';
 import { urlToList, bytesToSize } from '../../../utils/utils';
 import styles from './index.less';
@@ -81,6 +82,11 @@ class Repo extends PureComponent {
           <span>README.md</span>
         </span >
       ),
+      footer: (
+        <div>
+          <Button onClick={this.onRemoveRepo.bind(this)} size="small" type="danger">Remove project</Button>
+        </div>
+      ),
     };
     if (reposTree && reposTree.tree && reposTree.tree.length === 0) delete props.title;
     return (
@@ -88,6 +94,11 @@ class Repo extends PureComponent {
         <Markdown source={content} />
       </Card>
     );
+  }
+  onRemoveRepo() {
+    const { match, removeRepo } = this.props;
+    const { owner, repo } = match.params;
+    removeRepo({ owner, name: repo });
   }
   onSubmitDes() {
     // console.log('~~');
@@ -129,13 +140,7 @@ class Repo extends PureComponent {
     })();
     return (
       <PageHeader
-        title={(
-          <div>
-            <Link to={`/${owner}`}>{owner}</Link>
-            <span className={styles.pathDivider}>/</span>
-            <Link to={`/${owner}/${repo}`}>{repo}</Link>
-          </div>
-        )}
+        title={<RepoPath owner={owner} repo={repo} />}
         action={
           <div>
             <Button size="small" onClick={this.showCloneModal.bind(this)}>Clone</Button>
@@ -184,6 +189,7 @@ class Repo extends PureComponent {
             title={CodeViewHeader}
             extra={
               <div>
+                <Link to={`/${owner}/${repo}/edit/${reference}/${fileDetail.path}`}>Edit</Link>
                 <Link target="_blank" to={`/${owner}/${repo}/raw/${reference}/${fileDetail.path}`}>Raw</Link>
               </div>
             }
@@ -198,6 +204,7 @@ class Repo extends PureComponent {
             title={CodeViewHeader}
             extra={
               <div>
+                <Link to={`/${owner}/${repo}/edit/${reference}/${fileDetail.path}`}>Edit</Link>
                 <Link target="_blank" to={`/${owner}/${repo}/raw/${reference}/${fileDetail.path}`}>Raw</Link>
               </div>
             }
@@ -222,6 +229,7 @@ const mapState = ({ repo }) => ({
 const mapDispatch = ({ account, repo }) => ({
   verify: account.verify,
   getRepoDetail: repo.getRepoDetail,
+  removeRepo: repo.removeRepo,
   getRepoDetailReadme: repo.getRepoDetailReadme,
 });
 

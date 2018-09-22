@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Input, Select, Button } from 'uiw';
+import { Input, Select, Button, Divider } from 'uiw';
 import PageHeader from '../../components/PageHeader';
 import styles from './index.less';
 
@@ -8,13 +8,14 @@ const FormItem = ({
   label = '',
   value,
   type = 'text',
+  style = {},
   options,
   onChange = () => {},
 }) => {
   return (
     <div className={styles.formItem}>
       <label className={styles.formTitle}>{label}</label>
-      <div className={styles.formItemCon}>
+      <div className={styles.formItemCon} style={{ ...style }}>
         {options && (
           <Select onChange={onChange} value={value}>
             {options.map((item, idx) => <Select.Option key={idx} {...item} />)}
@@ -79,17 +80,22 @@ class New extends PureComponent {
         />
         <FormItem
           label="Repository name"
+          style={{ width: 200 }}
           value={form.name}
           onChange={this.onChange.bind(this, 'name')}
           field="name"
         />
         <FormItem
           label="Description (optional)"
+          style={{ maxWidth: 540 }}
           value={form.description}
           onChange={this.onChange.bind(this, 'description')}
           field="description"
         />
-        <Button onClick={this.onSubmit.bind(this)} disabled={disabled} type="success">成功按钮</Button>
+        <Divider />
+        <Button onClick={this.onSubmit.bind(this)} disabled={disabled} type="success">
+          Create repository
+        </Button>
       </PageHeader>
     );
   }

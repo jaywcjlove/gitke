@@ -23,6 +23,7 @@ export default {
   effects: {
     async getRepoDetail(options) {
       const repos = await request(`/api/repos/${options.owner}/${options.repo}`);
+      if (!repos) return;
       const reposTree = await request(`/api/repos/${repos.id}/tree`, {
         body: options,
       });
@@ -104,6 +105,12 @@ export default {
         body: options,
       });
       history.push(`${owner}/${repos.name}`);
+    },
+    async removeRepo(options) {
+      const { owner, name } = options;
+      const repos = await request(`/api/repos/${owner}/${name}`, { method: 'DELETE' });
+      console.log('repos', repos);
+      history.push(`/`);
     },
     async getRepos(options) {
       const { owner, ...otherOptions } = options;

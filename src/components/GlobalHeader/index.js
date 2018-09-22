@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Breadcrumb } from 'uiw';
+import { Breadcrumb, Icon } from 'uiw';
 import styles from './index.less';
 
 export default class index extends Component {
@@ -44,6 +44,7 @@ export default class index extends Component {
             </Breadcrumb>
           )}
           <div className={styles.right}>
+            <Link className={styles.plus} to="/new"><Icon type="plus" /></Link>
             {token ? <Link to="/account/profile">Hi! {userData.username || '-'}</Link> : <Link to="/login"> 登录 </Link>}
             {token && <Link to="/login"> 退出登录 </Link>}
           </div>

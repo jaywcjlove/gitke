@@ -16,7 +16,7 @@ class ListPage extends Component {
         footer={<Paging onChange={onChange} activePage={page} pageSize={limit} total={count} />}
       >
         <Loading loading={loading}>
-          {data.map((item, idx) => {
+          {data && data.map((item, idx) => {
             return (
               <List.Item className={styles.listItem} key={idx}>
                 <Link to={`/${item.owner.username}/${item.name}`}>{item.name}</Link>

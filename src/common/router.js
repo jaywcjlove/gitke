@@ -125,10 +125,13 @@ export const getRouterData = () => {
     '/:owner/:repo/tree/:branch': {
       component: dynamicWrapper(['account'], () => import('../routes/repo/tree/branch')),
     },
-    '/:owner/:repo/tree/:branch/**': {
+    '/:owner/:repo/edit/:branch/**': { // 文件编辑
+      component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/tree/edit')),
+    },
+    '/:owner/:repo/tree/:branch/**': { // 目录预览
       component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/index')),
     },
-    '/:owner/:repo/blob/:branch/**': {
+    '/:owner/:repo/blob/:branch/**': { // 文件预览
       component: dynamicWrapper(['account', 'repo'], () => import('../routes/repo/index')),
     },
   };

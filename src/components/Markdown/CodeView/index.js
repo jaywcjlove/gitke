@@ -3,7 +3,7 @@ import Prism from 'prismjs';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles/index.less';
-import langs from '../../../utils/prismLang';
+import langs from './prismLang';
 // https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
 
 export default class CodeView extends Component {
