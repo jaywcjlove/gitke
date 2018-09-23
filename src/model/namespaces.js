@@ -18,7 +18,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       references: {
-        model: 'users'
+        model: 'users',
+        key: 'id'
       },
       comment: '创建者id'
     },
@@ -60,6 +61,7 @@ module.exports = function (sequelize, DataTypes) {
     comment: '项目表',
     updatedAt: 'updated_at',
     createdAt: 'created_at',
+    underscored: true,
     freezeTableName: true
   });
 };

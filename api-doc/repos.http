@@ -86,6 +86,16 @@ Content-Type: {{contentType}}
 
 GET {{baseUrl}}/{{username}}/{{repo2}}/raw/{{ref}}/{{filepath}}
 
+### Add Repo
+
+POST {{baseUrl}}/api/user/repos
+Content-Type: {{contentType}}
+
+{
+	"name": "test",
+	"description": ""
+}
+
 ### Remove Repo
 
 @repoTest = test

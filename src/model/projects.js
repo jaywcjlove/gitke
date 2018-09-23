@@ -20,7 +20,8 @@ module.exports = function (sequelize, DataTypes) {
     namespace_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'namespaces'
+        model: 'namespaces',
+        key: 'id'
       },
       allowNull: false,
       comment: '命名空间，每个项目创建一个单独的ID，组织或者用户'
@@ -28,7 +29,8 @@ module.exports = function (sequelize, DataTypes) {
     creator_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'users'
+        model: 'users',
+        key: 'id'
       },
       allowNull: false,
       comment: '创建的用户ID'

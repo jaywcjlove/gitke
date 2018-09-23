@@ -17,7 +17,8 @@ module.exports = function (sequelize, DataTypes) {
       comment: '用户ID'
     },
   }, {
-    comment: '用户对应的项目隐射表'
+    comment: '用户对应的项目隐射表',
+    underscored: true,
   });
   // http://docs.sequelizejs.com/class/lib/model.js~Model.html#static-method-removeAttribute
   // Sequelize does not create id primary key

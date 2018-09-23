@@ -149,7 +149,6 @@ module.exports = {
       blob.free();
       tree.free();
     } catch (err) {
-      console.log('err:', err);
       ctx.response.status = err.statusCode || err.status || 500;
       ctx.body = { message: err.message, ...err }
     }
@@ -160,7 +159,6 @@ module.exports = {
     const { reposPath } = ctx.state.conf;
     repo = repo.replace(/.git$/, '');
     let transaction;
-
     try {
       // 托管事务
       transaction = await Models.sequelize.transaction();
@@ -168,10 +166,10 @@ module.exports = {
       if (!namespaces || !namespaces.id) ctx.throw(404, 'Owner does not exist!');
       const projects = await Models.projects.findOne({ where: { name: repo, namespace_id: namespaces.id }, transaction });
       if (!projects || !projects.id) ctx.throw(404, 'Repo does not exist!');
-      // await Models.projects.destroy({ where: { id: 1 }});
-      await Models.projects.destroy({ where: { namespace_id: namespaces.id, name: repo }, force: true, transaction });
       // 删除用户创建仓库的记录
       await Models.user_interacted_projects.destroy({ where: { project_id: projects.id, creator_id: namespaces.owner_id }, transaction });
+      // 删除仓库信息
+      await Models.projects.destroy({ where: { name: repo }, transaction });
       // remove repo
       await removeDir(PATH.join(reposPath, owner, `${repo}.git`));
       // transaction commit 事务提交
@@ -206,11 +204,9 @@ module.exports = {
         where: { id },
         include: [{ model: Models.users, as: 'owner', attributes: { exclude: ['password'] } }]
       });
-
       const { reposPath } = ctx.state.conf;
       const currentRepoPath = PATH.join(reposPath, projects.namespace.name, `${projects.name}.git`);
       const gitRepo = await Git.Repository.open(currentRepoPath);
-
       // 空仓库返回 README.md 说明内容
       let emptyRepoReadme = await readFile(PATH.join(__dirname, 'EmptyRepo.md'));
       if (gitRepo.isEmpty() === 1) {

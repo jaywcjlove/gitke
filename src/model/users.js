@@ -143,6 +143,9 @@ module.exports = function (sequelize, DataTypes) {
     comment: '用户表',
     updatedAt: 'updated_at',
     createdAt: 'created_at',
+    // 不允许逻辑删除
+    // paranoid: true,
+    underscored: true,
     freezeTableName: true
   });
 };
