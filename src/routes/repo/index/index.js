@@ -73,6 +73,7 @@ class Repo extends PureComponent {
   }
   readmeContent(content) {
     const { reposTree } = this.props;
+    console.log('reposTree', reposTree.entryCount);
     const props = {
       noHover: true,
       className: styles.cardReadme,
@@ -82,12 +83,14 @@ class Repo extends PureComponent {
           <span>README.md</span>
         </span >
       ),
-      footer: (
+    };
+    if (!reposTree.entryCount) {
+      props.footer = (
         <div>
           <Button onClick={this.onRemoveRepo.bind(this)} size="small" type="danger">Remove project</Button>
         </div>
-      ),
-    };
+      );
+    }
     if (reposTree && reposTree.tree && reposTree.tree.length === 0) delete props.title;
     return (
       <Card {...props}>

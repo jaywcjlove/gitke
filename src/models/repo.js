@@ -109,8 +109,9 @@ export default {
     async removeRepo(options) {
       const { owner, name } = options;
       const repos = await request(`/api/repos/${owner}/${name}`, { method: 'DELETE' });
-      console.log('repos', repos);
-      history.push(`/`);
+      if (repos) {
+        // history.push('/');
+      }
     },
     async getRepos(options) {
       const { owner, ...otherOptions } = options;

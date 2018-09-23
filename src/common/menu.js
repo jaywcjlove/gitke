@@ -109,7 +109,7 @@ const menuData = [
       },
       {
         name: 'Settings',
-        icon: <Icon type="settings" />,
+        icon: <Icon type="reposettings" />,
         path: 'settings',
       },
     ],
