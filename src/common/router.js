@@ -95,6 +95,15 @@ export const getRouterData = () => {
     '/account/keys': {
       component: dynamicWrapper([], () => import('../routes/account/keys')),
     },
+    '/settings/projects': {
+      component: dynamicWrapper([], () => import('../routes/settings/projects')),
+    },
+    '/settings/users': {
+      component: dynamicWrapper([], () => import('../routes/settings/users')),
+    },
+    '/settings/groups': {
+      component: dynamicWrapper([], () => import('../routes/settings/groups')),
+    },
     '/help': {
       component: dynamicWrapper([], () => import('../routes/help')),
     },

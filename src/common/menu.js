@@ -42,12 +42,10 @@ const menuData = [
     children: [
       {
         name: 'Your Organization',
-        icon: <Icon type="organizations" />,
         path: 'overview',
       },
       {
         name: 'Explore Organization',
-        icon: <Icon type="organizations" />,
         path: 'organizations',
       },
     ],
@@ -134,6 +132,28 @@ const menuData = [
       {
         name: 'SSH Keys',
         path: 'keys',
+      },
+    ],
+  },
+  {
+    name: 'Admin Settings',
+    icon: <Icon type="adminsettings" />,
+    path: 'settings',
+    children: [
+      {
+        name: 'Projects',
+        icon: <Icon type="repositories" />,
+        path: 'projects',
+      },
+      {
+        name: 'Users',
+        icon: <Icon type="users" />,
+        path: 'users',
+      },
+      {
+        name: 'Groups',
+        icon: <Icon type="organizations" />,
+        path: 'groups',
       },
     ],
   },
