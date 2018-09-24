@@ -33,7 +33,7 @@ export default {
         body: { username, password },
       });
       if (data) {
-        dispatch.account.updateState({ userData: data, token: data.token });
+        dispatch.global.updateState({ userData: data, token: data.token });
         history.replace('/');
       }
       this.updateState({ loading: false });

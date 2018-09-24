@@ -12,7 +12,9 @@ class Overview extends PureComponent {
   }
   componentDidMount() {
     const { userData } = this.props;
-    this.props.getRepos({ owner: userData.username, page: this.state.page });
+    if (userData) {
+      this.props.getRepos({ owner: userData.username, page: this.state.page });
+    }
   }
   onChange(pageNumber) {
     const { userData } = this.props;
