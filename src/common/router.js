@@ -32,7 +32,7 @@ export const getRouterData = () => {
       component: dynamicWrapper(['account'], () => import('../routes/join')),
     },
     '/': {
-      component: dynamicWrapper(['account'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper([], () => import('../layouts/BasicLayout')),
     },
     '/exception/403': {
       component: dynamicWrapper([], () => import('../routes/exception/403')),

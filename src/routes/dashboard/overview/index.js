@@ -35,12 +35,11 @@ class Overview extends PureComponent {
   }
 }
 
-const mapState = ({ account, repo }) => ({
-  userData: account.userData,
+const mapState = ({ global, repo }) => ({
+  userData: global.userData,
   repos: repo.repos,
 });
-const mapDispatch = ({ account, repo }) => ({
-  verify: account.verify,
+const mapDispatch = ({ repo }) => ({
   getRepos: repo.getRepos,
 });
 

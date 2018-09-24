@@ -82,8 +82,7 @@ const mapState = ({ repo }) => ({
   reposTree: repo.reposTree,
   readmeContent: repo.readmeContent,
 });
-const mapDispatch = ({ account, repo }) => ({
-  verify: account.verify,
+const mapDispatch = ({ repo }) => ({
   getRepoDetail: repo.getRepoDetail,
   getRepoDetailReadme: repo.getRepoDetailReadme,
 });

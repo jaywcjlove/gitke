@@ -1,4 +1,6 @@
+import { dispatch } from '@rematch/core';
 import request from '../utils/request';
+import history from '../history';
 
 const getToken = () => localStorage.getItem('token');
 const getUsername = () => {
@@ -31,18 +33,13 @@ export default {
         body: { username, password },
       });
       if (data) {
-        this.updateState({ userData: data, token: data.token });
+        dispatch.account.updateState({ userData: data, token: data.token });
+        history.replace('/');
       }
       this.updateState({ loading: false });
     },
     async logout() {
       await request('/api/user/logout', { method: 'DELETE' });
-    },
-    async verify() {
-      const data = await request('/api/user/verify');
-      if (data) {
-        this.updateState({ userData: data, token: data.token });
-      }
     },
   },
 };

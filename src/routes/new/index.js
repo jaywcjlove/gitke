@@ -101,8 +101,8 @@ class New extends PureComponent {
   }
 }
 
-const mapState = ({ account, organizations }) => ({
-  userData: account.userData,
+const mapState = ({ global, organizations }) => ({
+  userData: global.userData,
   orgsSelect: organizations.orgsSelect,
 });
 

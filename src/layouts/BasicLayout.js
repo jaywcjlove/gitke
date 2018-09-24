@@ -31,11 +31,6 @@ class BasicLayout extends PureComponent {
     };
   }
   componentDidMount() {
-    const { location } = this.props;
-    // 错误页面不做登录请求验证
-    if (!/^\/exception\//.test(location.pathname)) {
-      this.props.verify();
-    }
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     window.scrollTo(0, 0);
@@ -131,13 +126,12 @@ class BasicLayout extends PureComponent {
   }
 }
 
-const mapState = ({ global, account }) => ({
-  test: global.test,
-  token: account.token,
-  userData: account.userData,
+const mapState = ({ global }) => ({
+  token: global.token,
+  userData: global.userData,
 });
-const mapDispatch = ({ account }) => ({
-  verify: account.verify,
+const mapDispatch = ({ global }) => ({
+  verify: global.verify,
 });
 
 export default connect(mapState, mapDispatch)(BasicLayout);

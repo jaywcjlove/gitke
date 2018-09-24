@@ -23,14 +23,6 @@ class Login extends PureComponent {
   componentDidMount() {
     this.props.logout();
   }
-  componentWillReceiveProps(nextProps) {
-    const { history } = this.props;
-    if (nextProps.userData) {
-      setTimeout(() => {
-        history.push('/');
-      }, 800);
-    }
-  }
   login() {
     this.props.login(this.state.form);
   }
@@ -56,8 +48,8 @@ class Login extends PureComponent {
 
 const mapState = ({ global, account }) => ({
   test: global.test,
-  token: account.token,
-  userData: account.userData,
+  token: global.token,
+  userData: global.userData,
   message: account.message,
   loading: account.loading,
 });

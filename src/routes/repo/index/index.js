@@ -73,7 +73,6 @@ class Repo extends PureComponent {
   }
   readmeContent(content) {
     const { reposTree } = this.props;
-    console.log('reposTree', reposTree.entryCount);
     const props = {
       noHover: true,
       className: styles.cardReadme,
@@ -229,8 +228,8 @@ const mapState = ({ repo }) => ({
   reposTree: repo.reposTree,
   readmeContent: repo.readmeContent,
 });
-const mapDispatch = ({ account, repo }) => ({
-  verify: account.verify,
+
+const mapDispatch = ({ repo }) => ({
   getRepoDetail: repo.getRepoDetail,
   removeRepo: repo.removeRepo,
   getRepoDetailReadme: repo.getRepoDetailReadme,
