@@ -5,6 +5,8 @@ Gitke
 
 ```bash
 sudo npm install -g gitke --unsafe-perm # running as root
+# Run Innstall nodegit
+npm install nodegit --verbose
 # Run the server
 gitke
 # Open your browser and visit http://localhost:2018/
