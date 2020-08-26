@@ -35,31 +35,31 @@
     ]
   },
   "dependencies": {
-    "@koa/cors": "^2.2.2",
-    "colors-cli": "^1.0.18",
-    "dayjs": "^1.7.5",
-    "fs-extra": "^7.0.0",
+    "@koa/cors": "2.2.3",
+    "colors-cli": "1.0.18",
+    "dayjs": "1.7.5",
+    "fs-extra": "7.0.0",
     "git-side-band-message": "0.0.3",
-    "koa": "^2.5.2",
-    "koa-body": "^4.0.4",
-    "koa-bodyparser": "^4.2.1",
-    "koa-generic-session": "^2.0.1",
-    "koa-generic-session-sequelize": "^2.0.3",
-    "koa-json": "^2.0.2",
-    "koa-logger": "^3.2.0",
-    "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
-    "koa-views": "^6.1.4",
-    "local-ip-url": "^1.0.1",
-    "mime": "^2.3.1",
-    "nodegit": "^0.22.2",
-    "os-homedir": "^1.0.2",
+    "koa": "2.5.2",
+    "koa-body": "4.0.4",
+    "koa-bodyparser": "4.2.1",
+    "koa-generic-session": "2.0.1",
+    "koa-generic-session-sequelize": "2.0.3",
+    "koa-json": "2.0.2",
+    "koa-logger": "3.2.0",
+    "koa-router": "7.4.0",
+    "koa-static": "5.0.0",
+    "koa-views": "6.1.4",
+    "local-ip-url": "1.0.1",
+    "mime": "2.3.1",
+    "nodegit": "0.22.2",
+    "os-homedir": "1.0.2",
     "sequelize": "^4.38.0",
-    "sqlite3": "^4.0.2",
-    "through2": "^2.0.3",
-    "toml": "^2.3.3"
+    "sqlite3": "4.0.2",
+    "through2": "2.0.3",
+    "toml": "2.3.3"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "nodemon": "1.18.4"
   }
 }
