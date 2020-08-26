@@ -38,7 +38,7 @@
     "@koa/cors": "2.2.3",
     "colors-cli": "1.0.18",
     "dayjs": "1.7.5",
-    "fs-extra": "7.0.0",
+    "fs-extra": "7.0.1",
     "git-side-band-message": "0.0.3",
     "koa": "2.5.2",
     "koa-body": "4.0.4",
