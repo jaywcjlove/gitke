@@ -1529,10 +1529,10 @@ latest-version@^3.0.0:
   dependencies:
     package-json "^4.0.0"
 
-local-ip-url@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/local-ip-url/-/local-ip-url-1.0.1.tgz#0f20febcc08fcc0921987a9e29a4ee5d565d0cd4"
-  integrity sha512-SeE7sNNz5t6urj36TTkn7yAi4O49HqUR/FL2wegd7bjzW6W1JF0/KofEKuNFulp01eDjM628t0VpreKuglxBCg==
+local-ip-url@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/local-ip-url/-/local-ip-url-1.0.3.tgz#4a4bf4eff91a847f870918dff3e1e3273605a81d"
+  integrity sha512-OyHVtNHgSmxr8B+6iA8sxlGrdNQJdr6M8db5/v83BdZA/cYe7+0i1XsyBQ0AoRj2nK32O3znEuPU9/b8TS6iww==
 
 lodash.debounce@^4.0.8:
   version "4.0.8"
