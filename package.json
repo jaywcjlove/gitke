@@ -57,7 +57,7 @@
     "sequelize": "^4.38.0",
     "sqlite3": "4.0.2",
     "through2": "2.0.3",
-    "toml": "2.3.3"
+    "toml": "2.3.6"
   },
   "devDependencies": {
     "nodemon": "1.18.4"
