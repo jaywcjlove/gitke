@@ -1405,10 +1405,10 @@ koa-convert@^1.2.0:
     co "^4.6.0"
     koa-compose "^3.0.0"
 
-koa-generic-session-sequelize@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/koa-generic-session-sequelize/-/koa-generic-session-sequelize-2.0.3.tgz#d4443972957d057540e69e853f17cd07ff396cea"
-  integrity sha512-bR977wcSaZIwQUTx0xSbKMyq5mlAASOmwwKG0abgAbFGJbzBYmu5grXzN0QtFzRK1Fh10lqZ7JjECC7ESldRqA==
+koa-generic-session-sequelize@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/koa-generic-session-sequelize/-/koa-generic-session-sequelize-2.2.0.tgz#84b29c6ef9da38758d49cc6bd13beb3f7e1d5ae1"
+  integrity sha512-GwvVprRKsj3R4EMChxRHwlAdiw92GR1FLfB3zinUb+B1OBY12G9VVOl82btAfINMy3Su+vjbpXifKt2pr/hu7A==
 
 koa-generic-session@2.0.1:
   version "2.0.1"
