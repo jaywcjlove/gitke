@@ -51,7 +51,7 @@
     "koa-static": "5.0.0",
     "koa-views": "6.1.4",
     "local-ip-url": "1.0.1",
-    "mime": "2.3.1",
+    "mime": "2.6.0",
     "nodegit": "0.22.2",
     "os-homedir": "1.0.2",
     "sequelize": "^4.38.0",
