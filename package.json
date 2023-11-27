@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@koa/cors": "2.2.3",
-    "colors-cli": "1.0.18",
+    "colors-cli": "1.0.33",
     "dayjs": "1.7.5",
     "fs-extra": "7.0.0",
     "git-side-band-message": "0.0.3",
