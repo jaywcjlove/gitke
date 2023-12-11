@@ -35,7 +35,7 @@
     ]
   },
   "dependencies": {
-    "@koa/cors": "2.2.3",
+    "@koa/cors": "5.0.0",
     "colors-cli": "1.0.18",
     "dayjs": "1.7.5",
     "fs-extra": "7.0.0",
