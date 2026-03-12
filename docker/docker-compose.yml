@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: gitke
+      POSTGRES_PASSWORD: gitke
+      POSTGRES_DB: gitke
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  gitke:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      DATABASE_URL: postgres://gitke:gitke@postgres:5432/gitke
+      HOST: 0.0.0.0
+      PORT: 2018
+      REPO_ROOT: /data/git/repositories
+      PUBLIC_HTTP_BASE: http://127.0.0.1:2018
+      PUBLIC_SSH_BASE: git@127.0.0.1
+    volumes:
+      - gitrepos:/data/git/repositories
+    depends_on:
+      - postgres
+    ports:
+      - "2018:2018"
+
+volumes:
+  pgdata:
+  gitrepos:

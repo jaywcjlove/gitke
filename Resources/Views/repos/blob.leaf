@@ -1,0 +1,14 @@
+#extend("base"):
+  #export("title"): 文件内容 - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>#(owner)/#(repo) @ #(branch)</h2>
+      <p>文件：#(path)</p>
+      #if(isBinary):
+        <p>二进制文件，无法在线预览。</p>
+      #else:
+        <pre>#(content)</pre>
+      #endif
+    </div>
+  #endexport
+#endextend

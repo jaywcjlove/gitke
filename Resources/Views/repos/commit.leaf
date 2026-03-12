@@ -1,0 +1,41 @@
+#extend("base"):
+  #export("title"): Commit 详情 - Gitke #endexport
+  #export("body"):
+    <style>
+      .commit-meta { color: rgb(107,114,128); }
+      .commit-hash { font-size: 14px; word-break: break-all; }
+      .files-list { list-style: none; padding: 0; margin: 0; }
+      .files-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgb(229,231,235); }
+      .file-status { min-width: 42px; text-align: center; font-weight: 600; color: rgb(15,118,110); }
+      .diff-box { background: rgb(11,16,32); color: rgb(209,213,219); padding: 14px; border-radius: 8px; overflow: auto; }
+    </style>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px 0;">#(owner)/#(repo)</h2>
+      <p style="margin:0 0 10px 0;"><strong>#(commit.message)</strong></p>
+      <p class="commit-meta" style="margin:0;">#(commit.author) &lt;#(commit.email)&gt; | #(commit.date)</p>
+      <p class="commit-hash" style="margin:10px 0 0 0;"><code>#(commit.hash)</code></p>
+      <p style="margin:14px 0 0 0;">
+        <a href="/repos/#(owner)/#(repo)/commits?branch=#(branch)">返回提交列表</a>
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>修改文件</h3>
+      <ul class="files-list">
+        #for(file in files):
+          <li>
+            <span><span class="file-status">#(file.status)</span> #(file.path)</span>
+          </li>
+        #endfor
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Diff</h3>
+      <div class="diff-box">
+        <pre>#(diff)</pre>
+      </div>
+    </div>
+  #endexport
+#endextend

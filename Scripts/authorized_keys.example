@@ -1,0 +1,1 @@
+command="REPO_ROOT=/data/git/repositories /opt/gitke/Scripts/gitke-ssh-command.sh",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA.... user@example

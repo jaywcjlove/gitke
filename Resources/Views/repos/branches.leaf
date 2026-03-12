@@ -1,0 +1,58 @@
+#extend("base"):
+  #export("title"): 分支列表 - Gitke #endexport
+  #export("body"):
+    <style>
+      .branch-page-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .branch-table code { color: rgb(17,24,39); font-weight: 600; }
+      .branch-default { display: inline-block; margin-left: 8px; padding: 3px 8px; border-radius: 999px; font-size: 12px; color: rgb(6,95,70); background: rgb(236,253,245); border: 1px solid rgb(110,231,183); }
+      .branch-links { display: flex; gap: 8px; flex-wrap: wrap; }
+      .branch-links a { text-decoration: none; color: rgb(15,118,110); }
+      .commit-meta { color: rgb(107,114,128); font-size: 13px; }
+    </style>
+
+    <div class="card">
+      <div class="branch-page-head">
+        <div>
+          <h2 style="margin:0;">#(owner)/#(repo) 分支</h2>
+          <p class="muted" style="margin:8px 0 0 0;">默认分支：#(defaultBranch)</p>
+        </div>
+        <a href="/repos/#(owner)/#(repo)">返回仓库</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="branch-table">
+        <thead>
+          <tr>
+            <th>分支</th>
+            <th>最新提交</th>
+            <th>作者</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          #for(branch in branches):
+            <tr>
+              <td>
+                <code>#(branch.name)</code>
+                #if(branch.isDefault):
+                  <span class="branch-default">default</span>
+                #endif
+              </td>
+              <td>#(branch.latestMessage)</td>
+              <td>#(branch.latestAuthor)</td>
+              <td class="commit-meta">#(branch.latestDate)</td>
+              <td>
+                <div class="branch-links">
+                  <a href="/repos/#(owner)/#(repo)/tree/#(branch.name)">代码</a>
+                  <a href="/repos/#(owner)/#(repo)/commits?branch=#(branch.name)">提交</a>
+                </div>
+              </td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+    </div>
+  #endexport
+#endextend

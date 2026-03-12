@@ -1,0 +1,144 @@
+#extend("base"):
+  #export("title"): 仓库详情 - Gitke #endexport
+  #export("body"):
+    <style>
+      .repo-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+      .repo-path { margin: 0; font-size: 26px; }
+      .repo-badges { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+      .badge { display: inline-block; font-size: 12px; border-radius: 999px; padding: 4px 10px; border: 1px solid rgb(209,213,219); background: rgb(249,250,251); }
+      .badge.public { color: rgb(6,95,70); border-color: rgb(110,231,183); background: rgb(236,253,245); }
+      .badge.private { color: rgb(153,27,27); border-color: rgb(252,165,165); background: rgb(254,242,242); }
+      .repo-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .repo-actions a { display: inline-block; text-decoration: none; color: rgb(15,118,110); border: 1px solid rgb(153,246,228); background: rgb(240,253,250); padding: 6px 10px; border-radius: 6px; }
+      .clone-box { background: rgb(11,16,32); color: rgb(209,213,219); border-radius: 8px; padding: 10px; }
+      .clone-title { margin: 0 0 6px 0; font-size: 13px; color: rgb(156,163,175); }
+      .clone-line { display: flex; gap: 8px; align-items: center; }
+      .clone-line code { flex: 1; word-break: break-all; }
+      .copy-btn { background: rgb(31,41,55); color: rgb(229,231,235); border: 1px solid rgb(55,65,81); padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+      .branch-links { display: flex; gap: 8px; flex-wrap: wrap; }
+      .branch-link { text-decoration: none; border: 1px solid rgb(209,213,219); border-radius: 999px; padding: 4px 10px; color: rgb(55,65,81); }
+      .tree-list { list-style: none; padding-left: 0; margin: 0; }
+      .tree-row { display: flex; justify-content: space-between; padding: 8px 2px; border-bottom: 1px solid rgb(238,242,247); }
+      .tree-row code { color: rgb(107,114,128); }
+      .readme-wrap { line-height: 1.7; }
+      .empty-tip { color: rgb(107,114,128); font-style: italic; }
+    </style>
+
+    <div class="card">
+      <div class="repo-head">
+        <div>
+          <h2 class="repo-path">#(owner)/#(repo)</h2>
+          <div class="repo-badges">
+            #if(visibility == "public"):
+              <span class="badge public">public</span>
+            #else:
+              <span class="badge private">private</span>
+            #endif
+            <span class="badge">默认分支：#(defaultBranch)</span>
+          </div>
+          #if(description):
+            <p style="margin-top:10px;">#(description)</p>
+          #else:
+            <p class="empty-tip" style="margin-top:10px;">暂无仓库描述</p>
+          #endif
+        </div>
+        <div class="repo-actions">
+          <a href="/repos/#(owner)/#(repo)/branches">分支列表</a>
+          <a href="/repos/#(owner)/#(repo)/commits">提交历史</a>
+          <a href="/repos/#(owner)/#(repo)/tree/#(defaultBranch)">浏览代码</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Clone 地址</h3>
+      <div class="row">
+        <div>
+          <div class="clone-box">
+            <p class="clone-title">HTTP</p>
+            <div class="clone-line">
+              <code id="http-clone">#(httpCloneURL)</code>
+              <button class="copy-btn" type="button" onclick="copyClone('http-clone')">复制</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="clone-box">
+            <p class="clone-title">SSH</p>
+            <div class="clone-line">
+              <code id="ssh-clone">#(sshCloneURL)</code>
+              <button class="copy-btn" type="button" onclick="copyClone('ssh-clone')">复制</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>分支</h3>
+      <div class="branch-links">
+        #for(branch in branches):
+          <a class="branch-link" href="/repos/#(owner)/#(repo)/tree/#(branch)">#(branch)</a>
+        #endfor
+      </div>
+      <p><a href="/repos/#(owner)/#(repo)/branches">查看全部分支详情</a></p>
+    </div>
+
+    <div class="card">
+      <h3>最近提交</h3>
+      <table>
+        <thead><tr><th>Hash</th><th>Author</th><th>Date</th><th>Message</th></tr></thead>
+        <tbody>
+          #for(c in commits):
+            <tr>
+              <td><a href="/repos/#(owner)/#(repo)/commit/#(c.hash)?branch=#(defaultBranch)">#(c.shortHash)</a></td>
+              <td>#(c.author) &lt;#(c.email)&gt;</td>
+              <td>#(c.date)</td>
+              <td>#(c.message)</td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+      <p><a href="/repos/#(owner)/#(repo)/commits">查看全部提交</a></p>
+    </div>
+
+    <div class="card">
+      <h3>文件树（#(defaultBranch)）</h3>
+      <ul class="tree-list">
+        #for(e in tree):
+          <li class="tree-row">
+            #if(e.type == "tree"):
+              <span>[DIR] <a href="/repos/#(owner)/#(repo)/tree/#(defaultBranch)/#(e.name)">#(e.name)</a></span>
+              <code>directory</code>
+            #else:
+              <span>[FILE] <a href="/repos/#(owner)/#(repo)/blob/#(defaultBranch)/#(e.name)">#(e.name)</a></span>
+              <code>file</code>
+            #endif
+          </li>
+        #endfor
+      </ul>
+    </div>
+
+    #if(readmeHTML):
+      <div class="card">
+        <h3>README</h3>
+        <div class="readme-wrap">
+          #unsafe(readmeHTML)
+        </div>
+      </div>
+    #else:
+      <div class="card">
+        <h3>README</h3>
+        <p class="empty-tip">未检测到 README 文件。</p>
+      </div>
+    #endif
+
+    <script>
+      function copyClone(id) {
+        const text = document.getElementById(id)?.innerText || "";
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+      }
+    </script>
+  #endexport
+#endextend

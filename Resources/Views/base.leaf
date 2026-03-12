@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>#(title)</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f7f8fa; color: #1f2937; }
+    .nav { background: #111827; color: #fff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .nav a { color: #fff; text-decoration: none; margin-right: 16px; }
+    .wrap { max-width: 1060px; margin: 24px auto; padding: 0 16px; }
+    .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.08); margin-bottom: 16px; }
+    .muted { color: #6b7280; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e5e7eb; }
+    input, select, textarea { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; margin-top: 6px; margin-bottom: 14px; }
+    button { background: #0f766e; color: #fff; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; }
+    pre { background: #0b1020; color: #d1d5db; padding: 12px; border-radius: 6px; overflow: auto; }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div>
+      <a href="/repos"><strong>Gitke</strong></a>
+      <a href="/repos">仓库</a>
+      <a href="/repos/new">新建仓库</a>
+      <a href="/settings/ssh-keys">SSH Keys</a>
+      <a href="/admin/users">用户管理</a>
+    </div>
+    <form method="post" action="/logout"><button type="submit">退出</button></form>
+  </div>
+  <div class="wrap">
+    #import("body")
+  </div>
+</body>
+</html>

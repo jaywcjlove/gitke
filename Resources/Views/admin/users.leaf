@@ -1,0 +1,58 @@
+#extend("base"):
+  #export("title"): 用户管理 - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>管理员 - 用户管理</h2>
+      #if(error):
+        <p style="color:#b91c1c;">操作失败：#(error)</p>
+      #endif
+      #if(success):
+        <p style="color:#047857;">#(success)</p>
+      #endif
+
+      <h3>创建用户</h3>
+      <form method="post" action="/admin/users">
+        <label>用户名</label>
+        <input name="username" required />
+        <label>密码</label>
+        <input type="password" name="password" required />
+        <label><input type="checkbox" name="isAdmin" value="1" /> 管理员</label><br /><br />
+        <button type="submit">创建</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>用户列表</h3>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>用户名</th><th>管理员</th><th>创建时间</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          #for(u in users):
+            <tr>
+              <td><code>#(u.id)</code></td>
+              <td>#(u.username)</td>
+              <td>#(u.isAdmin)</td>
+              <td>#(u.createdAt)</td>
+              <td>
+                <form method="post" action="/admin/users/#(u.id)/update" style="margin-bottom:8px;">
+                  <input name="username" value="#(u.username)" required />
+                  <input name="password" placeholder="新密码（可空）" />
+                  #if(u.isAdmin):
+                    <label><input type="checkbox" name="isAdmin" value="1" checked /> 管理员</label>
+                  #else:
+                    <label><input type="checkbox" name="isAdmin" value="1" /> 管理员</label>
+                  #endif
+                  <button type="submit">保存</button>
+                </form>
+                <form method="post" action="/admin/users/#(u.id)/delete">
+                  <button type="submit" style="background:#b91c1c;">删除</button>
+                </form>
+              </td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+    </div>
+  #endexport
+#endextend

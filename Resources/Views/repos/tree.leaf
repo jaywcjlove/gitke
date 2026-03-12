@@ -1,0 +1,18 @@
+#extend("base"):
+  #export("title"): 文件树 - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>#(owner)/#(repo) @ #(branch)</h2>
+      <p>路径：/#(path)</p>
+      <ul>
+        #for(e in entries):
+          #if(e.type == "tree"):
+            <li>[DIR] <a href="/repos/#(owner)/#(repo)/tree/#(branch)/#(path)/#(e.name)">#(e.name)</a></li>
+          #else:
+            <li>[FILE] <a href="/repos/#(owner)/#(repo)/blob/#(branch)/#(path)/#(e.name)">#(e.name)</a></li>
+          #endif
+        #endfor
+      </ul>
+    </div>
+  #endexport
+#endextend

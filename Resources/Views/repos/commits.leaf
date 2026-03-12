@@ -1,0 +1,21 @@
+#extend("base"):
+  #export("title"): 提交历史 - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>#(owner)/#(repo) - #(branch)</h2>
+      <table>
+        <thead><tr><th>Hash</th><th>Author</th><th>Date</th><th>Message</th></tr></thead>
+        <tbody>
+          #for(c in commits):
+            <tr>
+              <td><a href="/repos/#(owner)/#(repo)/commit/#(c.hash)?branch=#(branch)">#(c.shortHash)</a></td>
+              <td>#(c.author) &lt;#(c.email)&gt;</td>
+              <td>#(c.date)</td>
+              <td>#(c.message)</td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+    </div>
+  #endexport
+#endextend

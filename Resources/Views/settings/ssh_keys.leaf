@@ -1,0 +1,52 @@
+#extend("base"):
+  #export("title"): SSH Keys - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>SSH Keys</h2>
+      <p class="muted">用于 Git SSH clone/fetch/push 认证。</p>
+      #if(error):
+        <p style="color:rgb(185,28,28);">操作失败：#(error)</p>
+      #endif
+      #if(success):
+        <p style="color:rgb(4,120,87);">#(success)</p>
+      #endif
+
+      <h3>新增 SSH Key</h3>
+      <form method="post" action="/settings/ssh-keys">
+        <label>标题</label>
+        <input name="title" placeholder="例如 MacBook Pro" required />
+        <label>Public Key</label>
+        <textarea name="publicKey" rows="4" placeholder="ssh-ed25519 AAAA... user@host" required></textarea>
+        <button type="submit">添加 Key</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>已有 Keys</h3>
+      <table>
+        <thead>
+          <tr><th>标题</th><th>Fingerprint</th><th>创建时间</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          #for(k in keys):
+            <tr>
+              <td>#(k.title)</td>
+              <td><code>#(k.fingerprint)</code></td>
+              <td>#(k.createdAt)</td>
+              <td>
+                <form method="post" action="/settings/ssh-keys/#(k.id)/update" style="margin-bottom:8px;">
+                  <input name="title" value="#(k.title)" required />
+                  <textarea name="publicKey" rows="3" required>#(k.publicKey)</textarea>
+                  <button type="submit">更新</button>
+                </form>
+                <form method="post" action="/settings/ssh-keys/#(k.id)/delete">
+                  <button type="submit" style="background:rgb(185,28,28);">删除</button>
+                </form>
+              </td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+    </div>
+  #endexport
+#endextend

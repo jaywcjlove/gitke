@@ -1,0 +1,26 @@
+#extend("base"):
+  #export("title"): 仓库列表 - Gitke #endexport
+  #export("body"):
+    <div class="card">
+      <h2>仓库列表</h2>
+      <p class="muted">当前用户：#(username)</p>
+      <table>
+        <thead>
+          <tr>
+            <th>名称</th><th>Owner</th><th>可见性</th><th>更新时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          #for(repo in repos):
+            <tr>
+              <td><a href="/repos/#(repo.owner)/#(repo.name)">#(repo.name)</a></td>
+              <td>#(repo.owner)</td>
+              <td>#(repo.visibility)</td>
+              <td>#(repo.updatedAt)</td>
+            </tr>
+          #endfor
+        </tbody>
+      </table>
+    </div>
+  #endexport
+#endextend

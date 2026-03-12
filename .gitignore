@@ -1,0 +1,25 @@
+data
+
+.build/
+.swiftpm/
+Package.resolved
+
+*.sqlite
+
+.DS_Store
+.cache
+.vscode
+.idea
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
+
+# IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
