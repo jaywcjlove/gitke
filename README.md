@@ -276,9 +276,9 @@ git clone wong@10.102.1.82:admin/scap.git
 
 Relevant files:
 
-- [sshd_config.example](/Users/wong/git/github/gitke/Scripts/sshd_config.example)
-- [authorized_keys.example](/Users/wong/git/github/gitke/Scripts/authorized_keys.example)
-- [gitke-ssh-command.sh](/Users/wong/git/github/gitke/Scripts/gitke-ssh-command.sh)
+- [sshd_config.example](./Scripts/sshd_config.example)
+- [authorized_keys.example](./Scripts/authorized_keys.example)
+- [gitke-ssh-command.sh](./Scripts/gitke-ssh-command.sh)
 
 Recommended `authorized_keys` pattern:
 
